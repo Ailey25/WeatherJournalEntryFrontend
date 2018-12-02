@@ -3,55 +3,48 @@ import { Route } from "react-router-dom";
 import JournalEntry from "./JournalEntry.js";
 import JournalEntryList from "./JournalEntryList.js";
 
-import WeatherStamp from "./WeatherStamp.js";
-
-// HARDCODED OBJECTS
-const weatherObject1 = {
-  main: {
-    temp: 3.0,
-    temp_min: 0.0,
-    temp_max: 6.0,
-  },
-  weather: {
-    description: 'Not as chilly',
-  },
-  name: 'Toronto',
-  weatherObjectId: '1'
-};
-
-const journalEntryList1 = [
-  {
-    id: '1',
-    title: "journal 1 title",
-    entry: "some journal entry",
-    weatherObject: weatherObject1,
-  },
-  {
-    id: '2',
-    title: "journal 2 title",
-    entry: "another journal entry",
-    weatherObject: weatherObject1,
-  }
-];
-//------------
-
 class Main extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      journalList: [],
+    }
+    this.addJournalEntry = this.addJournalEntry.bind(this);
+    this.getJournalEntry = this.getJournalEntry.bind(this);
+  }
+
+  addJournalEntry(journalObject) {
+    this.setState({
+      journalList: [...this.state.journalList, journalObject]
+    });
+  }
+
+  getJournalEntry(journalId) {
+    let object;
+    this.state.journalList.forEach((elem) => {
+      if (elem.id === journalId) {
+        object = elem;
+      }
+    });
+    return object;
   }
 
   render() {
     return (
       <div>
         <Route exact path="/" render={() => {
+          let myJournalList = this.state.journalList;
           return (
-            <JournalEntryList
-              journalEntryList={journalEntryList1} />
+            <JournalEntryList journalList={myJournalList} />
           );
         }} />
-        <Route path="/journal-entry/:mode" render={(props) => {
+        <Route path="/journal-entry/:mode/:id?" render={(props) => {
+          let myAddJournalEntry = this.addJournalEntry;
+          let myGetJournalEntry = this.getJournalEntry;
           return (
-            <JournalEntry key={props.match.params.mode} {...props} />
+            <JournalEntry key={props.match.params.mode} {...props}
+              addJournalEntry = {myAddJournalEntry}
+              getJournalEntry = {myGetJournalEntry} />
           );
         }} />
       </div>

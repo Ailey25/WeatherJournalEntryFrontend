@@ -1,8 +1,13 @@
 import React, { Component } from "react";
+import 'babel-polyfill';
+import uuidv4 from 'uuid/v4';
+import 'babel-polyfill';
+import WeatherStamp from "./WeatherStamp.js";
 import { CheckboxUpdateWeather } from "./CheckboxUpdateWeather.js"
 
 const CREATE = 'create';
 const EDIT = 'edit';
+const baseUrl = 'https://localhost:5001/api/values';
 
 class JournalEntry extends Component {
   constructor(props) {
@@ -12,6 +17,7 @@ class JournalEntry extends Component {
       title: '',
       entry: '',
       isUpdateWeather: false,
+      loading: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -20,13 +26,16 @@ class JournalEntry extends Component {
     this.setHeader = this.setHeader.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.state.mode === EDIT) {
-        this.setState({
-          isEditMode: true,
-          title: 'Some hardcoded title',
-          entry: 'Some hardcoded entry',
-        });
+      let journalEntry = this.props.getJournalEntry(this.props.match.params.id);
+        if (journalEntry != undefined) {
+          this.setState({
+            isEditMode: true,
+            title: journalEntry.title,
+            entry: journalEntry.entry,
+          });
+        }
     }
   }
 
@@ -54,11 +63,42 @@ class JournalEntry extends Component {
     }
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
-    //console.log('submit: ' + this.state.title + ' ' + this.state.entry);
-    //console.log('update weather? ' + this.state.isUpdateWeather);
+    // console.log('submit: ' + this.state.title + ' ' + this.state.entry);
+    // console.log('update weather? ' + this.state.isUpdateWeather);
     this.resetState();
+
+    if (this.state.mode === CREATE) {
+      const weatherObjectId = uuidv4();
+
+      // Add journal entry object to journal entry list
+      let journalObject = {
+        'title': this.state.title,
+        'entry': this.state.entry,
+        'id': weatherObjectId,
+      };
+      this.props.addJournalEntry(journalObject);
+
+      // POST: call backend to add weather object data
+      this.setState({loading: true});
+      await fetch(baseUrl + '/cityname/' + weatherObjectId + '/Toronto',
+        {method: 'POST'}
+      )
+        .then(response => {
+          // console.log(response);
+          this.setState({loading: false});
+        })
+        .catch((error) => {
+          console.log(error.message);
+          this.setState({
+            error: error.message,
+            loading: false,
+          });
+        });
+
+        // TODO: maybe do something to show it was sucecssfully added
+    }
   }
 
   resetState() {
@@ -85,7 +125,7 @@ class JournalEntry extends Component {
           <h2>Editing Journal Entry</h2>
         );
       default:
-      //TODO: redirect to error page - param 'mode' not valid
+      // TODO: redirect to error page - param 'mode' not valid
         break;
     }
   }
@@ -94,6 +134,8 @@ class JournalEntry extends Component {
     return (
       <div>
         {this.setHeader()}
+        <WeatherStamp id={this.props.match.params.id}
+          isShow = {this.state.mode === EDIT} />
         <form onSubmit={this.handleSubmit}>
           <section>
             <input id="title"
@@ -111,7 +153,7 @@ class JournalEntry extends Component {
             </textarea>
           </section>
           <CheckboxUpdateWeather
-            isCreateMode = {this.state.mode === CREATE}
+            isShow = {this.state.mode === EDIT}
             setIsUpdate={this.setIsUpdate} />
           <input type="submit"></input>
         </form>

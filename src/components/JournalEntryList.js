@@ -8,13 +8,12 @@ class JournalEntryList extends React.Component {
   }
 
   getJournalTitles() {
-    const titles = this.props.journalEntryList.map((journal) => {
+    const titles = this.props.journalList.map((journal) => {
       return(
         <li key={journal.id}>
           <span>
-            <label>id: {journal.id} - </label>
-            <label>{journal.title} - </label>
-            <Link to='/journal-entry/edit'>Edit</Link>
+            <label>{journal.title} </label>
+            <Link to={'/journal-entry/edit/' + journal.id}>Edit</Link>
           </span>
         </li>
       );
@@ -23,7 +22,7 @@ class JournalEntryList extends React.Component {
   }
 
   render() {
-    if (this.props.journalEntryList.length == 0) {
+    if (this.props.journalList.length === 0) {
       return (
         <div>
           <h2>Available Journal Entries</h2>

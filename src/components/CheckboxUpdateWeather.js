@@ -13,7 +13,7 @@ export class CheckboxUpdateWeather extends Component {
   }
 
   render() {
-    if (this.props.isCreateMode) {
+    if (!(this.props.isShow)) {
       return null;
     }
 
