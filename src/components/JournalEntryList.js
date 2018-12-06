@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 class JournalEntryList extends React.Component {
   constructor(props) {
     super(props);
-    this.getJournalTitles = this.getJournalTitles.bind(this);
+    this.displayJournalTitles = this.displayJournalTitles.bind(this);
   }
 
-  getJournalTitles() {
+  displayJournalTitles() {
     const titles = this.props.journalList.map((journal) => {
       return(
         <li key={journal.id}>
@@ -34,7 +34,7 @@ class JournalEntryList extends React.Component {
         <div>
           <h2>Available Journal Entries</h2>
           <ul>
-            {this.getJournalTitles()}
+            {this.displayJournalTitles()}
           </ul>
         </div>
       );
