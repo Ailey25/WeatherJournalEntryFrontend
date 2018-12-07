@@ -32,6 +32,7 @@ class JournalEntry extends Component {
     this.resetState = this.resetState.bind(this);
     this.setHeader = this.setHeader.bind(this);
     this.getAPICallParam = this.getAPICallParam.bind(this);
+    this.setCityId = this.setCityId.bind(this);
   }
 
   componentDidMount() {
@@ -89,13 +90,11 @@ class JournalEntry extends Component {
     //console.log('here: ' + this.state.callTypeAPI + ': ' + this.state.callParams);
     if (this.state.mode === CREATE) {
       if (!this.validateSubmission()) return;
-    } else if (this.state.mode === EDIT) {
-      console.log('Edit mode submission isn\'t implemented yet');
-      return; // handle update info
     }
 
     let weatherObjectId = this.setWeatherObjectId();
     let fetchUrl = this.setFetchUrl(weatherObjectId);
+    if (fetchUrl === '') return
 
     // POST: callbackend to update/add weather object data
     this.setState({loading: true});
@@ -126,10 +125,14 @@ class JournalEntry extends Component {
       if (this.updateJournalEntryList(weatherObjectId)) {
         this.resetState();
       }
+      this.setState({
+        error: 'Journal entry edited/added (re-enter to see updated weather info)\
+                - Might add another page to redirect to later'
+      });
     } else {
       this.setState({
         error: 'Journal entry could not be added - Invalid location',
-      })
+      });
     }
   }
 
@@ -148,28 +151,39 @@ class JournalEntry extends Component {
   }
 
   setFetchUrl(weatherObjectId) {
-    let params = this.state.callParams.split(',').map(param => {
-      return param.trim().replace(/\s\s+/g, ' ');
-    });
     let fetchUrl = baseUrl;
-    switch(this.state.callTypeAPI) {
-      case CITY_NAME:
-        let byCityNameParam = '/' + params[0];
-        if (params.length > 1) {
-          byCityNameParam += '/' + params[1];
+    if (this.state.mode === EDIT) {
+       if (this.state.cityid === '') {
+         this.setState({ error: 'Try again in a few seconds'});
+         return '';
+       } else {
+         fetchUrl += '/' + CITY_ID + '/' + weatherObjectId +
+                     '/' + this.state.cityid;
+         return fetchUrl;
+       }
+     } else if (this.state.mode === CREATE) {
+        let params = this.state.callParams.split(',').map(param => {
+          return param.trim().replace(/\s\s+/g, ' ');
+        });
+        switch(this.state.callTypeAPI) {
+          case CITY_NAME:
+            let byCityNameParam = '/' + params[0];
+            if (params.length > 1) {
+              byCityNameParam += '/' + params[1];
+            }
+            fetchUrl += '/' + CITY_NAME + '/' + weatherObjectId + byCityNameParam;
+            return fetchUrl;
+          case CITY_ID:
+            let byCityIdParam = '/' + params[0];
+            fetchUrl += '/' + CITY_ID + '/' + weatherObjectId + byCityIdParam;
+            return fetchUrl;
+          default:
+            this.setState({
+              error: 'API call param not recognized'
+            })
+            return '';
         }
-        fetchUrl += '/' + CITY_NAME + '/' + weatherObjectId + byCityNameParam;
-        return fetchUrl;
-      case CITY_ID:
-        let byCityIdParam = '/' + params[0];
-        fetchUrl += '/' + CITY_ID + '/' + weatherObjectId + byCityIdParam;
-        return fetchUrl;
-      default:
-        this.setState({
-          error: 'API call param not recognized'
-        })
-        return;
-    }
+      }
   }
 
   updateJournalEntryList(weatherObjectId) {
@@ -293,12 +307,17 @@ class JournalEntry extends Component {
     return null;
   }
 
+  setCityId(cityId) {
+    this.setState({ cityid: cityId });
+  }
+
   render() {
     return (
       <div>
         {this.setHeader()}
         <WeatherStamp id={this.props.match.params.id}
-          isShow = {this.state.mode === EDIT} />
+          isShow = {this.state.mode === EDIT}
+          setCityId={this.setCityId} />
         <form onSubmit={this.handleSubmit}>
           <section id="journal">
             <input id="title"

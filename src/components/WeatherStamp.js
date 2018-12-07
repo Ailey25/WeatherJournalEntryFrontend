@@ -2,18 +2,16 @@ import React, { Component } from "react";
 import 'babel-polyfill';
 
 const baseUrl = '/api/values';
-const weatherObjectParam = '/weatherobject';
-const weatherParam = '/weather';
-const mainParam = '/main';
 
 class WeatherStamp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      cityid: '',
       name: '',
       main: {},
       weather: [],
+      loading: false,
     }
     this.temp = this.temp.bind(this);
     this.decription = this.description.bind(this);
@@ -21,13 +19,14 @@ class WeatherStamp extends Component {
 
   async componentDidMount() {
     if (this.props.isShow) {
-      // FETCHING CITY NAME
+      // FETCHING WEATHER OBJECT
       this.setState({loading: true});
-      await fetch(baseUrl + weatherObjectParam + '/' + this.props.id)
+      await fetch(baseUrl + '/weatherobject/' + this.props.id)
         .then(response => response.json())
         .then((data) => {
           this.setState({
             loading: false,
+            cityid: data.id,
             name: data.name,
           });
         })
@@ -40,7 +39,7 @@ class WeatherStamp extends Component {
 
         // FETCHING MAIN (temperature)
         this.setState({loading: true});
-        await fetch(baseUrl + mainParam + '/' + this.props.id)
+        await fetch(baseUrl + '/main/' + this.props.id)
           .then(response => response.json())
           .then((data) => {
             this.setState({
@@ -57,7 +56,7 @@ class WeatherStamp extends Component {
 
         // FETCHING WEATHER ARRAY
         this.setState({loading: true});
-        await fetch(baseUrl + weatherParam + '/' + this.props.id)
+        await fetch(baseUrl + '/weather/' + this.props.id)
           .then(response => response.json())
           .then((data) => {
             this.setState({
@@ -72,6 +71,8 @@ class WeatherStamp extends Component {
             });
           });
       }
+
+      this.props.setCityId(this.state.cityid);
   }
 
   temp(unit) {
@@ -98,7 +99,7 @@ class WeatherStamp extends Component {
     let descriptions = this.state.weather.map((weather) => {
       return (
         <label key={weather.id}>
-          {weather.description}
+          {weather.description}&nbsp;
         </label>
       );
     });
