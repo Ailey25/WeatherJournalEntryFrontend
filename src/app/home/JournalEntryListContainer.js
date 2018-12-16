@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
-import JournalEntry from "./JournalEntry.js";
-import JournalEntryList from "./JournalEntryList.js";
+import { JournalEntryList } from './JournalEntryList.js';
+import JournalEntryContainer from './JournalEntryContainer.js';
 
-class Main extends Component {
+class JournalEntryListContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,6 +15,7 @@ class Main extends Component {
   }
 
   addJournalEntry(journalObject) {
+    //console.log('add: ' + journalObject + ' ' + journalObject.id);
     this.setState({
       journalList: [...this.state.journalList, journalObject]
     });
@@ -46,7 +47,7 @@ class Main extends Component {
   render() {
     return (
       <div>
-        <Route exact path="/" render={() => {
+      <Route exact path="/" render={() => {
           let myJournalList = this.state.journalList;
           return (
             <JournalEntryList journalList={myJournalList} />
@@ -57,7 +58,7 @@ class Main extends Component {
           let myEditJournalEntry = this.editJournalEntry;
           let myGetJournalEntry = this.getJournalEntry;
           return (
-            <JournalEntry key={props.match.params.mode} {...props}
+            <JournalEntryContainer key={props.match.params.mode} {...props}
               addJournalEntry = {myAddJournalEntry}
               getJournalEntry = {myGetJournalEntry}
               editJournalEntry = {myEditJournalEntry} />
@@ -68,4 +69,5 @@ class Main extends Component {
   }
 }
 
-export default Main;
+
+export default JournalEntryListContainer;

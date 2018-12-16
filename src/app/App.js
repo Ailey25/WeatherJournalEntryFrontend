@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import { hot } from "react-hot-loader";
 import "./App.css";
-import Main from "./components/Main.js"
+import JournalEntryListContainer from "./home/JournalEntryListContainer.js";
 
 class App extends Component {
   render() {
@@ -16,7 +16,7 @@ class App extends Component {
             <Link to="/journal-entry/create">Create new journal entry</Link>
           </li>
         </ul>
-        <Main />
+        <JournalEntryListContainer />
       </div>
     );
   }

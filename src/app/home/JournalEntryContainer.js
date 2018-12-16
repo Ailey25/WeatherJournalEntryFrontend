@@ -1,24 +1,24 @@
 import React, { Component } from "react";
 import 'babel-polyfill';
 import uuidv4 from 'uuid/v4';
-import 'babel-polyfill';
-import WeatherStamp from "./WeatherStamp.js";
+import WeatherStampContainer from "./WeatherStampContainer.js";
+import {
+  CREATE, EDIT, CITY_ID, CITY_NAME, BASE_URL,
+} from './constants.js'
+import {
+  JournalEntryHeader,
+  JournalEntryBody,
+  JournalEntryAPI,
+} from './JournalEntry.js';
 
-const CREATE = 'create';
-const EDIT = 'edit';
-const CITY_ID = 'cityid';
-const CITY_NAME = 'cityname';
-const baseUrl = '/api/values';
-
-class JournalEntry extends Component {
+class JournalEntryContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: this.props.match.params.mode,
       title: '',
       entry: '',
       callTypeAPI: CITY_NAME,
-      callParams: '',
+      callParams: [],
       error: '',
       status: '',
       loading: false,
@@ -30,13 +30,11 @@ class JournalEntry extends Component {
     this.updateJournalEntryList = this.updateJournalEntryList.bind(this);
     this.validateSubmission = this.validateSubmission.bind(this);
     this.resetState = this.resetState.bind(this);
-    this.setHeader = this.setHeader.bind(this);
-    this.getAPICallParam = this.getAPICallParam.bind(this);
     this.setCityId = this.setCityId.bind(this);
   }
 
   componentDidMount() {
-    if (this.state.mode === EDIT) {
+    if (this.props.match.params.mode=== EDIT) {
       let journalEntry = this.props.getJournalEntry(this.props.match.params.id);
         if (journalEntry != undefined) {
           this.setState({
@@ -49,7 +47,6 @@ class JournalEntry extends Component {
   }
 
   handleChange(e) {
-    //console.log('change: ' + e.currentTarget.id)
     switch(e.currentTarget.id) {
       case "title":
         this.setState({
@@ -88,7 +85,7 @@ class JournalEntry extends Component {
   async handleSubmit(e) {
     e.preventDefault();
     //console.log('here: ' + this.state.callTypeAPI + ': ' + this.state.callParams);
-    if (this.state.mode === CREATE) {
+    if (this.props.match.params.mode=== CREATE) {
       if (!this.validateSubmission()) return;
     }
 
@@ -138,9 +135,9 @@ class JournalEntry extends Component {
 
   setWeatherObjectId() {
     let weatherObjectId = '';
-    if (this.state.mode === CREATE) {
+    if (this.props.match.params.mode === CREATE) {
       weatherObjectId = uuidv4();
-    } else if (this.state.mode === EDIT) {
+    } else if (this.props.match.params.mode === EDIT) {
       weatherObjectId = this.props.match.params.id;
     } else {
       this.setState({
@@ -151,8 +148,8 @@ class JournalEntry extends Component {
   }
 
   setFetchUrl(weatherObjectId) {
-    let fetchUrl = baseUrl;
-    if (this.state.mode === EDIT) {
+    let fetchUrl = BASE_URL;
+    if (this.props.match.params.mode === EDIT) {
        if (this.state.cityid === '') {
          this.setState({ error: 'Try again in a few seconds'});
          return '';
@@ -161,7 +158,7 @@ class JournalEntry extends Component {
                      '/' + this.state.cityid;
          return fetchUrl;
        }
-     } else if (this.state.mode === CREATE) {
+     } else if (this.props.match.params.mode === CREATE) {
         let params = this.state.callParams.split(',').map(param => {
           return param.trim().replace(/\s\s+/g, ' ');
         });
@@ -258,93 +255,42 @@ class JournalEntry extends Component {
     });
   }
 
-  setHeader() {
-    switch (this.state.mode) {
-      case CREATE:
-        return (
-          <h2>Creating Journal Entry</h2>
-        );
-      case EDIT:
-        return(
-          <h2>Editing Journal Entry</h2>
-        );
-      default:
-        return(
-          <h2>Uh oh - 'mode' not recognized in JournalEntry</h2>
-        );
-    }
-  }
-
-  getAPICallParam() {
-    if (this.state.mode === CREATE) {
-      return(
-        <div>
-          <label>Enter location by:</label><br></br>
-          <input id={CITY_NAME}
-            type="radio" name="weather"
-            checked={this.state.callTypeAPI === CITY_NAME}
-            onChange={this.handleChange} />
-          <label>
-            City Name (and optionally country code, separated by space)<br></br>
-            (e.g. Toronto, CA)
-          </label>
-          <br></br>
-          <input id={CITY_ID}
-            type="radio" name="weather"
-            checked={this.state.callTypeAPI === CITY_ID}
-            onChange={this.handleChange} />
-          <label>
-            City ID<br></br>
-            (e.g. 6167865)
-          </label>
-          <br></br>
-          <input id="callParams"
-            type="text" value={this.state.callParams}
-            onChange={this.handleChange} />
-        </div>
-      );
-    }
-    return null;
-  }
-
   setCityId(cityId) {
     this.setState({ cityid: cityId });
   }
 
   render() {
+    const component = this;
     return (
       <div>
-        {this.setHeader()}
-        <WeatherStamp id={this.props.match.params.id}
-          isShow = {this.state.mode === EDIT}
-          setCityId={this.setCityId} />
+        <JournalEntryHeader
+          mode={component.props.match.params.mode}
+        />
+        <WeatherStampContainer id={component.props.match.params.id}
+          mode={component.props.match.params.mode}
+          setCityId={component.setCityId} />
+        <JournalEntryBody
+          handleSubmit={(e) => component.handleSubmit(e)}
+          handleChange={(e) => component.handleChange(e)}
+          title={component.state.title}
+          entry={component.state.entry}
+        />
+        <JournalEntryAPI
+          mode={component.props.match.params.mode}
+          handleSubmit={(e) => component.handleSubmit(e)}
+          handleChange={(e) => component.handleChange(e)}
+          callType={component.state.callTypeAPI}
+          callParams={component.state.callParams}
+        />
         <form onSubmit={this.handleSubmit}>
-          <section id="journal">
-            <input id="title"
-              placeholder="Enter journal title"
-              value={this.state.title}
-              onChange = {this.handleChange}>
-            </input>
-          </section>
-          <section>
-            <textarea id="entry"
-              rows="10" cols="50"
-              placeholder="Your journal entry"
-              value={this.state.entry}
-              onChange={this.handleChange}>
-            </textarea>
-          </section>
-          <section id="weather">
-            {this.getAPICallParam()}
-          </section>
-          <input type="submit"></input>
-          <div id="error">
-            {this.state.error}
-          </div>
+        <input type="submit"></input>
         </form>
+        <div id="error">
+          {this.state.error}
+        </div>
       </div>
     );
   }
 }
 
-export default JournalEntry;
+export default JournalEntryContainer;

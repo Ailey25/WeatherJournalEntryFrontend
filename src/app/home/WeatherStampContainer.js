@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import 'babel-polyfill';
+import { WeatherStamp } from './WeatherStamp.js';
+import {
+  EDIT,
+  CELCIUS,
+  FAHRENHEIT,
+  BASE_URL,
+} from './constants.js'
 
-const baseUrl = '/api/values';
-
-class WeatherStamp extends Component {
+class WeatherStampContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,15 +18,14 @@ class WeatherStamp extends Component {
       weather: [],
       loading: false,
     }
-    this.temp = this.temp.bind(this);
-    this.decription = this.description.bind(this);
+    this.calcTemp = this.calcTemp.bind(this);
   }
 
   async componentDidMount() {
-    if (this.props.isShow) {
+    if (this.props.mode === EDIT) {
       // FETCHING WEATHER OBJECT
       this.setState({loading: true});
-      await fetch(baseUrl + '/weatherobject/' + this.props.id)
+      await fetch(BASE_URL + '/weatherobject/' + this.props.id)
         .then(response => response.json())
         .then((data) => {
           this.setState({
@@ -39,7 +43,7 @@ class WeatherStamp extends Component {
 
         // FETCHING MAIN (temperature)
         this.setState({loading: true});
-        await fetch(baseUrl + '/main/' + this.props.id)
+        await fetch(BASE_URL + '/main/' + this.props.id)
           .then(response => response.json())
           .then((data) => {
             this.setState({
@@ -56,7 +60,7 @@ class WeatherStamp extends Component {
 
         // FETCHING WEATHER ARRAY
         this.setState({loading: true});
-        await fetch(baseUrl + '/weather/' + this.props.id)
+        await fetch(BASE_URL + '/weather/' + this.props.id)
           .then(response => response.json())
           .then((data) => {
             this.setState({
@@ -75,54 +79,30 @@ class WeatherStamp extends Component {
       this.props.setCityId(this.state.cityid);
   }
 
-  temp(unit) {
-    if (unit === 'C') {
+  calcTemp(unit) {
+    if (unit === CELCIUS) {
       let tempCelcius = this.state.main.temp - 273.15;
       tempCelcius = Math.round(tempCelcius * 100) / 100;
-      return(
-        <label>{tempCelcius}<sup>°C</sup></label>
-      );
-    } else if (unit === 'F') {
+      return tempCelcius;
+    } else if (unit === FAHRENHEIT) {
       let tempFahrenheit = (this.state.main.temp - 273.15) * 9/5 + 32;
       tempFahrenheit = Math.round(tempFahrenheit * 100) / 100;
-      return(
-        <label>{tempFahrenheit}<sup>°F</sup></label>
-      );
-    } else {
-      return (
-        <label>Invalid unit</label>
-      );
+      return tempFahrenheit;
     }
-  }
-
-  description() {
-    let descriptions = this.state.weather.map((weather) => {
-      return (
-        <label key={weather.id}>
-          {weather.description}&nbsp;
-        </label>
-      );
-    });
-    return descriptions;
   }
 
   render() {
-    if (!(this.props.isShow)) return null;
-
-    if (this.state.loading) {
-      return(<div>Loading weather info...</div>);
-    }
-
-    return(
-      <div>
-        <label>{this.state.name}</label>
-        <br></br>
-        {this.temp('C')}
-        <br></br>
-        <i>{this.description()}</i>
-      </div>
+    const component = this;
+    return (
+      <WeatherStamp
+        mode={component.props.mode}
+        loading={component.state.loading}
+        cityName={component.state.name}
+        unit={CELCIUS}
+        temp={component.calcTemp(CELCIUS)}
+        weather={component.state.weather} />
     );
   }
 }
 
-export default WeatherStamp;
+export default WeatherStampContainer;
