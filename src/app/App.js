@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, Route } from "react-router-dom";
 import { hot } from "react-hot-loader";
 import "./App.css";
-import JournalEntryListContainer from "./home/JournalEntryListContainer.js";
+import JournalListContainer from "./home/JournalListContainer";
 
 class App extends Component {
   render() {
@@ -16,7 +16,7 @@ class App extends Component {
             <Link to="/journal-entry/create">Create new journal entry</Link>
           </li>
         </ul>
-        <JournalEntryListContainer />
+        <JournalListContainer />
       </div>
     );
   }

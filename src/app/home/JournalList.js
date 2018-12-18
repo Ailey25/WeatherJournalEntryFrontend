@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const JournalEntryList = (props) => {
+const JournalList = (props) => {
   if (props.journalList.length === 0) {
     return (
       <div>
@@ -30,4 +30,4 @@ const JournalEntryList = (props) => {
   }
 }
 
-export { JournalEntryList }
+export { JournalList }

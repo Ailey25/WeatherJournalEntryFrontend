@@ -1,34 +1,41 @@
-import types from './types';
+import * as types from './types';
 
 // Initial States
 const journalListInitialState = {
   journalList: [],
 }
-const weatherStampReducer = {
+const weatherStampInitialState = {
   weatherObject: {},
   main: {},
-  weather: {},
+  weather: [],
+  isLoading: false,
 }
-const journalEntryReducer = {
-  journalEntry: {},
-  callType: '',
-  callParams: [],
-  statusCode: '',
-  message: '',
+const journalInitialState = {
+  // journalEntry: {},
+  // callType: '',
+  // callParams: [],
+  mode: '',
+  isPosting: false,
+  response: {
+    ok: false,
+  },
+  error: {
+    status: '',
+    message: '',
+  }
 }
 
-// Reducers
-const journalDataListReducer = (state = journalListInitialState, action) => {
+export const journalListReducer = (state = journalListInitialState, action) => {
   switch(action.type) {
-    case types.ADD_TO_JOURNAL_ENTRY_LIST:
+    case types.ADD_TO_JOURNAL_LIST:
       return {
         journalList: [...state.journalList, action.journalEntry]
       };
-    case types.EDIT_JOURNAL_ENTRY_LIST:
+    case types.EDIT_JOURNAL_LIST:
       return {
         journalList: [
           ...this.state.journalList.slice(0, index),
-          action.journalObject,
+          action.journalEntry,
           ...this.state.journalList.slice(index+1)
         ]
       };
@@ -37,64 +44,94 @@ const journalDataListReducer = (state = journalListInitialState, action) => {
   }
 }
 
-const weatherStampReducer = (state = weatherStampReducer, action) => {
+export const weatherStampReducer = (state = weatherStampInitialState, action) => {
   switch(action.type) {
-    case types.SET_WEATHER_OBJECT:
+    case types.WEATHER_STAMP_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
+    case types.WEATHER_OBJECT_SUCCESS:
       return {
         ...state,
         weatherObject: {
           cityId: action.weatherObject.cityId,
           cityName: action.weatherObject.cityName,
         },
-      }
-    case types.SET_MAIN:
+      };
+    case types.MAIN_SUCCESS:
       return {
         ...state,
         main: {
           temp: action.main.temp,
         },
-      }
-    case types.SET_WEATHER:
+      };
+    case types.WEATHER_SUCCESS:
       return {
         ...state,
-        weather: {
-          description: action.weather.description,
-        },
-      }
+        weather: action.weather,
+      };
+    case types.WEATHER_STAMP_ERROR:
+      return {
+        ...state,
+        error: action.error,
+      };
     default:
       return state;
   }
 }
 
-const journalEntryReducer = (status=journalEntryReducer, action) => {
+export const journalReducer = (state=journalInitialState, action) => {
   switch(action.type) {
-    case types.SET_API_CALL_TYPE:
+    case types.JOURNAL_MODE:
       return {
         ...state,
-        callType: action.callType,
-      }
-    case types.SET_API_CALL_PARAMS:
+        mode: action.mode,
+      };
+    case types.WEATHER_DATA_IS_POSTING:
       return {
         ...state,
-        callParans: action.callParans,
-      }
-    case types.SET_HTTP_STATUS_CODE:
+        isPosting: action.isPosting,
+      };
+    case types.WEATHER_DATA_ERROR:
       return {
         ...state,
-        statusCode: action.statusCode,
-      }
-    case types.SET_MESSAGE:
-      return {
-        ...state,
-        message: action.message,
-      }
+        response: {
+          ok: false,
+        },
+        error: {
+          status: action.error.status,
+          message: action.error.message,
+        }
+      };
+    case types.WEATHER_DATA_POST_SUCCESS:
+     return {
+       ...state,
+       response: {
+         ok: action.response.ok,
+       },
+     };
+    // case types.SET_API_CALL_TYPE:
+    //   return {
+    //     ...state,
+    //     callType: action.callType,
+    //   };
+    // case types.SET_API_CALL_PARAMS:
+    //   return {
+    //     ...state,
+    //     callParans: action.callParans,
+    //   };
+    // case types.SET_HTTP_STATUS_CODE:
+    //   return {
+    //     ...state,
+    //     statusCode: action.statusCode,
+    //   };
+    // case types.SET_MESSAGE:
+    //   return {
+    //     ...state,
+    //     message: action.message,
+    //   };
     default:
-      return state,
+      return state;
   }
-}
-
-export default {
-  journalDataListReducer,
-  weatherStampReducer,
-  journalEntryReducer,
 }
