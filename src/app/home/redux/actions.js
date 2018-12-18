@@ -6,9 +6,10 @@ export const addToJournalList = (journalEntry) => ({
   journalEntry
 });
 
-export const editJournalList = (journalEntry) => ({
+export const editJournalList = (journalEntry, index) => ({
   type: types.EDIT_JOURNAL_LIST,
-  journalEntry
+  journalEntry,
+  index
 });
 
 // weather journal

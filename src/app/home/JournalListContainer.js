@@ -18,7 +18,7 @@ class JournalListContainer extends Component {
   editJournal(journalObject) {
     let index = this.props.journalList.findIndex(j => j.id === journalObject.id);
     if (index != -1) {
-      this.props.onEditJournalList(journalObject);
+      this.props.onEditJournalList(journalObject, index);
     } // object's id doesn't exist in journalList
   }
 
@@ -61,8 +61,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onAddToJournalList: (journalObject) =>
     dispatch(addToJournalList(journalObject)),
-  onEditJournalList: (journalObject) =>
-    dispatch(editJournalList(journalObject)),
+  onEditJournalList: (journalObject, index) =>
+    dispatch(editJournalList(journalObject, index)),
 });
 
 export default withRouter(

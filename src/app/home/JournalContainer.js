@@ -37,6 +37,7 @@ class JournalContainer extends Component {
   }
 
   componentDidMount() {
+    this.props.setErrorMessage('');
     if (this.props.match.params.mode === EDIT) {
       let journalEntry = this.props.getJournalEntry(this.props.match.params.id);
       if (journalEntry !== undefined) {

@@ -34,9 +34,9 @@ export const journalListReducer = (state = journalListInitialState, action) => {
     case types.EDIT_JOURNAL_LIST:
       return {
         journalList: [
-          ...this.state.journalList.slice(0, index),
+          ...state.journalList.slice(0, action.index),
           action.journalEntry,
-          ...this.state.journalList.slice(index+1)
+          ...state.journalList.slice(action.index+1)
         ]
       };
     default:
