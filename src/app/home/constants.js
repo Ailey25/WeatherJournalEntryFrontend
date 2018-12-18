@@ -1,20 +1,11 @@
 // journal entry
-const CREATE = 'create';
-const EDIT = 'edit';
-const CITY_ID = 'cityid';
-const CITY_NAME = 'cityname';
+export const CREATE = 'create';
+export const EDIT = 'edit';
+export const CITY_ID = 'cityid';
+export const CITY_NAME = 'cityname';
+
 // weather stamp
-const CELCIUS = 'C';
-const FAHRENHEIT = 'F';
+export const CELCIUS = 'C';
+export const FAHRENHEIT = 'F';
 
-const BASE_URL = '/api/values';
-
-export {
-  CREATE,
-  EDIT,
-  CITY_ID,
-  CITY_NAME,
-  CELCIUS,
-  FAHRENHEIT,
-  BASE_URL,
-}
+export const BASE_URL = '/api/values';

@@ -1,9 +1,9 @@
 import React from "react";
 import {
   CREATE, EDIT, CITY_ID, CITY_NAME
-} from './constants.js'
+} from './constants'
 
-const JournalEntryHeader= (props) => {
+const JournalHeader= (props) => {
   switch (props.mode) {
     case CREATE:
       return (
@@ -18,10 +18,10 @@ const JournalEntryHeader= (props) => {
         <h2>Uh oh - 'mode' not recognized in JournalEntry</h2>
       );
   }
-}
+};
 
-const JournalEntryBody = (props) => {
-  return (
+const JournalBody = (props) => {
+  return(
     <div>
       <form onSubmit={(e) => props.handleSubmit(e)}>
         <section id="journal">
@@ -41,10 +41,10 @@ const JournalEntryBody = (props) => {
         </section>
       </form>
     </div>
-  );
-}
+  )
+};
 
-const JournalEntryAPI = (props) => {
+const JournalPostWeatherDataInputs = (props) => {
   if (props.mode === EDIT) return null;
   return (
     <div>
@@ -76,10 +76,16 @@ const JournalEntryAPI = (props) => {
       </form>
     </div>
   );
-}
+};
+
+const JournalPostWeatherDataResults = (props) => {
+  if (props.isLoading) return <div>Loading results...</div>
+  return <div>{props.message}</div>;
+};
 
 export {
-  JournalEntryHeader,
-  JournalEntryBody,
-  JournalEntryAPI,
+  JournalHeader,
+  JournalBody,
+  JournalPostWeatherDataInputs,
+  JournalPostWeatherDataResults,
 }

@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 import {
-  journalDataListReducer,
+  journalListReducer,
   weatherStampReducer,
-  journalEntryReducer,
-} from './app/components/redux/reducers.js';
+  journalReducer,
+} from './app/home/redux/reducers';
 
 const rootReducer = combineReducers({
-  journalDataListReducer,
+  journalListReducer,
   weatherStampReducer,
-  journalEntryReducer,
+  journalReducer,
 });
 
 export default rootReducer;

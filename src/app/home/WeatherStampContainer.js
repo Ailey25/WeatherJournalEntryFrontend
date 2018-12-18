@@ -1,94 +1,18 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom';
 import 'babel-polyfill';
-import { WeatherStamp } from './WeatherStamp.js';
-import {
-  EDIT,
-  CELCIUS,
-  FAHRENHEIT,
-  BASE_URL,
-} from './constants.js'
+
+import { WeatherStamp } from './WeatherStamp';
+import { fetchWeatherStampInfo } from  './redux/getWeatherAPIActions';
+import { EDIT, CELCIUS, BASE_URL } from './constants'
 
 class WeatherStampContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cityid: '',
-      name: '',
-      main: {},
-      weather: [],
-      loading: false,
-    }
-    this.calcTemp = this.calcTemp.bind(this);
-  }
-
   async componentDidMount() {
     if (this.props.mode === EDIT) {
-      // FETCHING WEATHER OBJECT
-      this.setState({loading: true});
-      await fetch(BASE_URL + '/weatherobject/' + this.props.id)
-        .then(response => response.json())
-        .then((data) => {
-          this.setState({
-            loading: false,
-            cityid: data.id,
-            name: data.name,
-          });
-        })
-        .catch((error) => {
-          this.setState({
-            error: error.message,
-            loading: false,
-          });
-        });
-
-        // FETCHING MAIN (temperature)
-        this.setState({loading: true});
-        await fetch(BASE_URL + '/main/' + this.props.id)
-          .then(response => response.json())
-          .then((data) => {
-            this.setState({
-              loading: false,
-              main: data,
-            });
-          })
-          .catch((error) => {
-            this.setState({
-              error: error.message,
-              loading: false,
-            });
-          });
-
-        // FETCHING WEATHER ARRAY
-        this.setState({loading: true});
-        await fetch(BASE_URL + '/weather/' + this.props.id)
-          .then(response => response.json())
-          .then((data) => {
-            this.setState({
-              loading: false,
-              weather: data,
-            });
-          })
-          .catch((error) => {
-            this.setState({
-              error: error.message,
-              loading: false,
-            });
-          });
-      }
-
-      this.props.setCityId(this.state.cityid);
-  }
-
-  calcTemp(unit) {
-    if (unit === CELCIUS) {
-      let tempCelcius = this.state.main.temp - 273.15;
-      tempCelcius = Math.round(tempCelcius * 100) / 100;
-      return tempCelcius;
-    } else if (unit === FAHRENHEIT) {
-      let tempFahrenheit = (this.state.main.temp - 273.15) * 9/5 + 32;
-      tempFahrenheit = Math.round(tempFahrenheit * 100) / 100;
-      return tempFahrenheit;
+      await this.props.getWeatherData(this.props.id);
     }
+    this.props.setCityId(this.props.weatherObject.cityId);
   }
 
   render() {
@@ -96,13 +20,32 @@ class WeatherStampContainer extends Component {
     return (
       <WeatherStamp
         mode={component.props.mode}
-        loading={component.state.loading}
-        cityName={component.state.name}
+        isLoading={component.props.isLoading}
+        cityName={component.props.weatherObject.cityName}
         unit={CELCIUS}
-        temp={component.calcTemp(CELCIUS)}
-        weather={component.state.weather} />
+        temp={component.props.main.temp}
+        weather={component.props.weather} />
     );
   }
 }
 
-export default WeatherStampContainer;
+const mapStateToProps = (state) => ({
+  weatherObject: {
+    cityName: state.weatherStampReducer.weatherObject.cityName,
+    cityId: state.weatherStampReducer.weatherObject.cityId,
+  },
+  main: {
+    temp: state.weatherStampReducer.main.temp,
+  },
+  weather: state.weatherStampReducer.weather,
+  isLoading: state.weatherStampReducer.isLoading,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getWeatherData: (id) =>
+    dispatch(fetchWeatherStampInfo(id))
+});
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(WeatherStampContainer)
+);
