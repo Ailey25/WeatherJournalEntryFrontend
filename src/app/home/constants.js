@@ -1,8 +1,8 @@
 // journal entry
 export const CREATE = 'create';
 export const EDIT = 'edit';
-export const CITY_ID = 'cityid';
-export const CITY_NAME = 'cityname';
+export const CITY_ID = 'CITY_ID';
+export const CITY_NAME = 'CITY_NAME';
 
 // weather stamp
 export const CELCIUS = 'C';

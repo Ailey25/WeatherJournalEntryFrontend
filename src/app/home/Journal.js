@@ -53,7 +53,7 @@ const JournalPostWeatherDataInputs = (props) => {
         <label>Enter location by:</label><br></br>
         <input id={CITY_NAME}
           type="radio" name="weather"
-          checked={props.callType === CITY_NAME}
+          checked={props.check === CITY_NAME}
           onChange={(e) => props.handleChange(e)} />
         <label>
           City Name (and optionally country code, separated by space)<br></br>
@@ -62,15 +62,15 @@ const JournalPostWeatherDataInputs = (props) => {
         <br></br>
         <input id={CITY_ID}
           type="radio" name="weather"
-          checked={props.callType === CITY_ID}
+          checked={props.check === CITY_ID}
           onChange={(e) => props.handleChange(e)} />
         <label>
           City ID<br></br>
           (e.g. 6167865)
         </label>
         <br></br>
-        <input id="callParams"
-          type="text" value={props.callParams}
+        <input id="callParamsString"
+          type="text" value={props.callParamsString}
           onChange={(e) => props.handleChange(e)} />
       </section>
       </form>

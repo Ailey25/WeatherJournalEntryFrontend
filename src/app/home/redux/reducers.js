@@ -11,9 +11,6 @@ const weatherStampInitialState = {
   isLoading: false,
 }
 const journalInitialState = {
-  // journalEntry: {},
-  // callType: '',
-  // callParams: [],
   mode: '',
   isPosting: false,
   response: {
@@ -111,26 +108,6 @@ export const journalReducer = (state=journalInitialState, action) => {
          ok: action.response.ok,
        },
      };
-    // case types.SET_API_CALL_TYPE:
-    //   return {
-    //     ...state,
-    //     callType: action.callType,
-    //   };
-    // case types.SET_API_CALL_PARAMS:
-    //   return {
-    //     ...state,
-    //     callParans: action.callParans,
-    //   };
-    // case types.SET_HTTP_STATUS_CODE:
-    //   return {
-    //     ...state,
-    //     statusCode: action.statusCode,
-    //   };
-    // case types.SET_MESSAGE:
-    //   return {
-    //     ...state,
-    //     message: action.message,
-    //   };
     default:
       return state;
   }

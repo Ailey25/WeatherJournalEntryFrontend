@@ -1,23 +1,18 @@
 import React from "react";
-import { CREATE, CELCIUS, FAHRENHEIT } from './constants';
-import { kelvinToCelcius, kelvinToFahrenheit } from './utility.js';
+import { CREATE } from './constants';
+import { calcTemp } from './utility.js';
 
 const WeatherStamp = (props) => {
   if (props.mode === CREATE) return null;
   if (props.isLoading) return(<div>Loading weather info...</div>);
 
-  let temp;
-  if (props.unit === CELCIUS) {
-    temp = kelvinToCelcius(props.temp);
-  } else if (props.unit === FAHRENHEIT) {
-    temp = kelvinToFahrenheit(props.temp);
-  }
+  let convertedTemp = calcTemp(props.temp, props.unit);
 
   return (
     <div>
       <label>{props.cityName}</label>
       <br></br>
-      <label>{temp}<sup>°{props.unit}</sup></label>
+      <label>{convertedTemp}<sup>°{props.unit}</sup></label>
       <br></br>
       { // weather descriptions
         props.weather.map((weather) => (

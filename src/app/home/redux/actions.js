@@ -17,14 +17,3 @@ export const setJournalMode = (mode) => ({
   type: types.JOURNAL_MODE,
   mode
 });
-
-// export const setAPICallType = (callType) => ({
-//   type: types.SET_API_CALL_TYPE,
-//   callType
-// });
-//
-// export const setAPICallParams = (callParams) => ({
-//   type: types.SET_API_CALL_PARAMS,
-//   callParams
-// });
-//

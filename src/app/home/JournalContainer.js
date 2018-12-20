@@ -16,47 +16,55 @@ import {
 } from './Journal';
 import { setJournalMode } from './redux/actions';
 import { postWeatherData, setErrorObject } from './redux/postWeatherAPIActions';
+import {
+  validateCityName, validateCityId,
+  setDataWeatherPostUrl
+} from './utility';
 
 class JournalContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
       title: '',
       entry: '',
       callType: CITY_NAME,
-      callParams: [],
+      callParamsString: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.setWeatherObjectId = this.setWeatherObjectId.bind(this);
-    this.setFetchUrl = this.setFetchUrl.bind(this);
     this.updateJournalEntryList = this.updateJournalEntryList.bind(this);
     this.validateSubmission = this.validateSubmission.bind(this);
     this.resetState = this.resetState.bind(this);
-    this.setCityId = this.setCityId.bind(this);
   }
 
   componentDidMount() {
     this.props.setErrorMessage('');
-    if (this.props.match.params.mode === EDIT) {
-      let journalEntry = this.props.getJournalEntry(this.props.match.params.id);
-      if (journalEntry !== undefined) {
-        this.setState({
-          title: journalEntry.title,
-          entry: journalEntry.entry,
-        });
-      }
+    if (this.props.match.params.mode === CREATE) {
+      this.setState({
+        id: uuidv4()
+      });
+    } else if (this.props.match.params.mode === EDIT) {
+      let journal = this.props.getJournalEntry(this.props.match.params.id);
+      this.setState({
+        id: this.props.match.params.id,
+        title: journal.title,
+        entry: journal.entry,
+        callType: CITY_ID,
+      });
+    } else {
+      setErrorMessage('Journal mode not recognized');
     }
   }
 
   handleChange(e) {
     switch(e.currentTarget.id) {
-      case "title":
+      case 'title':
         this.setState({
             title: e.currentTarget.value,
         });
         break;
-      case "entry":
+      case 'entry':
         this.setState({
             entry: e.currentTarget.value,
         });
@@ -71,9 +79,9 @@ class JournalContainer extends Component {
           callType: CITY_ID,
         });
         break;
-      case 'callParams':
+      case 'callParamsString':
         this.setState({
-          callParams: e.currentTarget.value,
+          callParamsString: e.currentTarget.value,
         });
         break;
       default:
@@ -86,81 +94,41 @@ class JournalContainer extends Component {
 
   async handleSubmit(e) {
     e.preventDefault();
-    //console.log('here: ' + this.state.callType + ': ' + this.state.callParams);
-    if (this.props.match.params.mode=== CREATE) {
+    //console.log('here: ' + this.state.callType + ': ' + this.state.callParamsString);
+    if (this.props.match.params.mode === CREATE) {
       if (!this.validateSubmission()) return;
     }
 
-    let weatherObjectId = this.setWeatherObjectId();
-    let fetchUrl = this.setFetchUrl(weatherObjectId);
-    if (fetchUrl === '') return
+    if (this.props.weatherObject === undefined) return;
+    let fetchUrl = setDataWeatherPostUrl(
+      this.props.match.params.mode,
+      this.state.callType,
+      this.state.id,
+      this.state.callParamsString,
+      this.props.weatherObject.cityId
+    );
 
     await this.props.postWeatherData(fetchUrl);
 
     if (this.props.response.ok) {
-      if (this.updateJournalEntryList(weatherObjectId)) {
+      if (this.updateJournalEntryList()) {
         this.resetState();
       }
       this.props.setErrorMessage(
-        'Journal entry edited/added (re-enter to see updated weather info)\
-        - Might add another page to redirect to later'
+        'Journal entry edited/added!\
+        Re-enter to see updated weather info\
+        [Might add another page to redirect to later]'
       );
     } else {
       this.props.setErrorMessage('Journal entry could not be added - Invalid location');
     }
   }
 
-  setWeatherObjectId() {
-    let weatherObjectId = '';
-    if (this.props.match.params.mode === CREATE) {
-      weatherObjectId = uuidv4();
-    } else if (this.props.match.params.mode === EDIT) {
-      weatherObjectId = this.props.match.params.id;
-    } else {
-      setErrorMessage('Journal entry mode not recognized');
-    }
-    return weatherObjectId;
-  }
-
-  setFetchUrl(weatherObjectId) {
-    let fetchUrl = BASE_URL;
-    if (this.props.match.params.mode === EDIT) {
-       if (this.state.cityid === '') {
-         this.props.setErrorMessage('Try again in a few seconds');
-         return '';
-       } else {
-         fetchUrl += '/' + CITY_ID + '/' + weatherObjectId +
-                     '/' + this.state.cityid;
-         return fetchUrl;
-       }
-     } else if (this.props.match.params.mode === CREATE) {
-        let params = this.state.callParams.split(',').map(param => {
-          return param.trim().replace(/\s\s+/g, ' ');
-        });
-        switch(this.state.callType) {
-          case CITY_NAME:
-            let byCityNameParam = '/' + params[0];
-            if (params.length > 1) {
-              byCityNameParam += '/' + params[1];
-            }
-            fetchUrl += '/' + CITY_NAME + '/' + weatherObjectId + byCityNameParam;
-            return fetchUrl;
-          case CITY_ID:
-            let byCityIdParam = '/' + params[0];
-            fetchUrl += '/' + CITY_ID + '/' + weatherObjectId + byCityIdParam;
-            return fetchUrl;
-          default:
-            this.props.setErrorMessage('API call param not recognized');
-            return '';
-        }
-      }
-  }
-
-  updateJournalEntryList(weatherObjectId) {
+  updateJournalEntryList() {
     let journalObject = {
+      id: this.state.id,
       title: this.state.title,
       entry: this.state.entry,
-      id: weatherObjectId,
     };
     switch(this.props.match.params.mode) {
       case CREATE:
@@ -176,55 +144,50 @@ class JournalContainer extends Component {
   }
 
   validateSubmission() {
-    // Check for empty param
-    if (this.state.callParams.length == 0) {
-      this.props.setErrorMessage('Location value cannot be empty');
-      return false;
-    }
-
     switch(this.state.callType) {
       case CITY_NAME:
-        let alphabetsCheck = /^[a-z][a-z/\s,]*$/i.test(this.state.callParams);
-        let commaCheck = /^[^,]+,[^,]+$/.test(this.state.callParams);
-        if (this.state.callParams.indexOf(',') != -1) {
-          if (!commaCheck) {
-            this.props.setErrorMessage(
-              'Enter country code after comma or remove comma'
-            );
-            return false;
-          }
-        }
-        if (!(alphabetsCheck)) {
+        const isCityNameValid = validateCityName(this.state.callParamsString);
+        if (isCityNameValid === 1) {
+          return true;
+        } else if (isCityNameValid === 2) {
+          this.props.setErrorMessage(
+            'Location value cannot be empty'
+          );
+        } else if (isCityNameValid === 3) {
+          this.props.setErrorMessage(
+            'Enter country code after comma or remove comma'
+          );
+        } else if (isCityNameValid === 4) {
           this.props.setErrorMessage(
             'City name and/or country code can only contain alphabets'
           );
-          return false;
         }
-        return true;
+        return false;
       case CITY_ID:
-        let numbersCheck = /^[0-9]+$/.test(this.state.callParams);
-        if (!numbersCheck) {
-          this.props.setErrorMessage('City ID must be numbers')
-          return false;
+        const isCityIdValid = validateCityId(this.state.callParamsString);
+        if (isCityIdValid === 1) {
+          return true;
+        } else if (isCityNameValid === 2) {
+          this.props.setErrorMessage(
+            'Location value cannot be empty'
+          );
+        } else if (isCityIdValid === 4) {
+          this.props.setErrorMessage('City ID must be numbers');
         }
-        return true;
+        return false;
       default:
         return false;
     }
   }
 
-  resetState() {
-    this.setState({
-      title: '',
-      entry: '',
-      callParams: '',
-    });
-    this.props.setErrorMessage('');
-  }
-
-  setCityId(cityId) {
-    this.setState({ cityid: cityId });
-  }
+resetState() {
+  if (this.props.match.params.mode === CREATE) this.setState({ id: uuidv4() })
+  this.setState({
+    title: '',
+    entry: '',
+  });
+  this.props.setErrorMessage('');
+}
 
   render() {
     const component = this;
@@ -235,7 +198,7 @@ class JournalContainer extends Component {
         />
         <WeatherStampContainer id={component.props.match.params.id}
           mode={component.props.match.params.mode}
-          setCityId={component.setCityId} />
+        />
         <JournalBody
           handleSubmit={(e) => component.handleSubmit(e)}
           handleChange={(e) => component.handleChange(e)}
@@ -246,8 +209,8 @@ class JournalContainer extends Component {
           mode={component.props.match.params.mode}
           handleSubmit={(e) => component.handleSubmit(e)}
           handleChange={(e) => component.handleChange(e)}
-          callType={component.state.callType}
-          callParams={component.state.callParams}
+          check={component.state.callType}
+          callParamsString={component.state.callParamsString}
         />
         <form onSubmit={this.handleSubmit}>
         <input type="submit"></input>
@@ -262,6 +225,7 @@ class JournalContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  weatherObject: state.weatherStampReducer.weatherObject,
   isPosting: state.journalReducer.isPosting,
   response: {
     ok: state.journalReducer.response.ok,

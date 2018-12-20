@@ -12,7 +12,6 @@ class WeatherStampContainer extends Component {
     if (this.props.mode === EDIT) {
       await this.props.getWeatherData(this.props.id);
     }
-    this.props.setCityId(this.props.weatherObject.cityId);
   }
 
   render() {
