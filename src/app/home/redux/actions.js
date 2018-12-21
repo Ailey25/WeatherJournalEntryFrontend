@@ -1,4 +1,19 @@
 import * as types from './types';
+import { CELCIUS, FAHRENHEIT } from '../constants';
+
+export const toggleTempUnit = (currentTempUnit) => {
+  if (currentTempUnit === FAHRENHEIT) {
+    return {
+      type: types.TOGGLE_TEMP_UNIT,
+      tempUnit: CELCIUS
+    }
+  } else {
+    return {
+      type: types.TOGGLE_TEMP_UNIT,
+      tempUnit: FAHRENHEIT
+    }
+  }
+};
 
 // weather journal list
 export const addToJournalList = (journalEntry) => ({

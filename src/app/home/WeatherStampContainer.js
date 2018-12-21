@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import 'babel-polyfill';
@@ -21,7 +21,7 @@ class WeatherStampContainer extends Component {
         mode={component.props.mode}
         isLoading={component.props.isLoading}
         cityName={component.props.weatherObject.cityName}
-        unit={CELCIUS}
+        unit={component.props.tempUnit}
         temp={component.props.main.temp}
         weather={component.props.weather} />
     );
@@ -29,6 +29,7 @@ class WeatherStampContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  tempUnit: state.globalVariablesReducer.tempUnit,
   weatherObject: {
     cityName: state.weatherStampReducer.weatherObject.cityName,
     cityId: state.weatherStampReducer.weatherObject.cityId,

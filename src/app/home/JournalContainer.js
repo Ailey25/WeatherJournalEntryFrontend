@@ -1,12 +1,16 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import 'babel-polyfill';
 import uuidv4 from 'uuid/v4';
 
-import WeatherStampContainer from "./WeatherStampContainer";
+import WeatherStampContainer from './WeatherStampContainer';
 import {
-  CREATE, EDIT, CITY_ID, CITY_NAME, BASE_URL,
+  CREATE, EDIT,
+  CITY_ID, CITY_NAME,
+  BASE_URL,
+  CITY_NAME_VALIDATION_STATUS, CITY_NAME_VALIDATION_MESSAGE,
+  CITY_ID_VALIDATION_STATUS, CITY_ID_VALIDATION_MESSAGE,
 } from './constants'
 import {
   JournalHeader,
@@ -31,11 +35,7 @@ class JournalContainer extends Component {
       callType: CITY_NAME,
       callParamsString: [],
     };
-    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.updateJournalEntryList = this.updateJournalEntryList.bind(this);
-    this.validateSubmission = this.validateSubmission.bind(this);
-    this.resetState = this.resetState.bind(this);
   }
 
   componentDidMount() {
@@ -57,7 +57,7 @@ class JournalContainer extends Component {
     }
   }
 
-  handleChange(e) {
+  handleChange = (e) => {
     switch(e.currentTarget.id) {
       case 'title':
         this.setState({
@@ -124,7 +124,7 @@ class JournalContainer extends Component {
     }
   }
 
-  updateJournalEntryList() {
+  updateJournalEntryList = () => {
     let journalObject = {
       id: this.state.id,
       title: this.state.title,
@@ -143,44 +143,25 @@ class JournalContainer extends Component {
     }
   }
 
-  validateSubmission() {
+  validateSubmission = () => {
     switch(this.state.callType) {
       case CITY_NAME:
-        const isCityNameValid = validateCityName(this.state.callParamsString);
-        if (isCityNameValid === 1) {
-          return true;
-        } else if (isCityNameValid === 2) {
-          this.props.setErrorMessage(
-            'Location value cannot be empty'
-          );
-        } else if (isCityNameValid === 3) {
-          this.props.setErrorMessage(
-            'Enter country code after comma or remove comma'
-          );
-        } else if (isCityNameValid === 4) {
-          this.props.setErrorMessage(
-            'City name and/or country code can only contain alphabets'
-          );
-        }
+        const cityNameValidationStatus = validateCityName(this.state.callParamsString);
+        if (cityNameValidationStatus === CITY_NAME_VALIDATION_STATUS.SUCCESS) return true;
+        this.props.setErrorMessage(CITY_NAME_VALIDATION_MESSAGE[cityNameValidationStatus]);
         return false;
       case CITY_ID:
-        const isCityIdValid = validateCityId(this.state.callParamsString);
-        if (isCityIdValid === 1) {
-          return true;
-        } else if (isCityNameValid === 2) {
-          this.props.setErrorMessage(
-            'Location value cannot be empty'
-          );
-        } else if (isCityIdValid === 4) {
-          this.props.setErrorMessage('City ID must be numbers');
-        }
+        const cityIdValidationStatus = validateCityId(this.state.callParamsString);
+        if (cityIdValidationStatus === CITY_ID_VALIDATION_STATUS.SUCCESS) return true;
+        this.props.setErrorMessage(CITY_ID_VALIDATION_MESSAGE[cityIdValidationStatus]);
         return false;
       default:
         return false;
     }
   }
 
-resetState() {
+
+resetState = () => {
   if (this.props.match.params.mode === CREATE) this.setState({ id: uuidv4() })
   this.setState({
     title: '',

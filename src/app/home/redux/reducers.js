@@ -1,6 +1,11 @@
 import * as types from './types';
+import { CELCIUS } from '../constants';
 
 // Initial States
+const globalVariablesInitialState = {
+  tempUnit: CELCIUS,
+};
+
 const journalListInitialState = {
   journalList: [],
 }
@@ -22,6 +27,17 @@ const journalInitialState = {
   }
 }
 
+export const globalVariablesReducer = (state = globalVariablesInitialState, action) => {
+  switch(action.type) {
+    case types.TOGGLE_TEMP_UNIT:
+      return {
+        tempUnit: action.tempUnit,
+      };
+    default:
+      return state;
+  }
+};
+
 export const journalListReducer = (state = journalListInitialState, action) => {
   switch(action.type) {
     case types.ADD_TO_JOURNAL_LIST:
@@ -39,7 +55,7 @@ export const journalListReducer = (state = journalListInitialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export const weatherStampReducer = (state = weatherStampInitialState, action) => {
   switch(action.type) {
@@ -76,7 +92,7 @@ export const weatherStampReducer = (state = weatherStampInitialState, action) =>
     default:
       return state;
   }
-}
+};
 
 export const journalReducer = (state=journalInitialState, action) => {
   switch(action.type) {
@@ -111,4 +127,4 @@ export const journalReducer = (state=journalInitialState, action) => {
     default:
       return state;
   }
-}
+};

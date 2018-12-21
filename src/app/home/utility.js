@@ -1,34 +1,30 @@
-import React from "react";
+import React from 'react';
 import {
   BASE_URL,
   EDIT, CREATE,
   CITY_NAME, CITY_ID,
-  CELCIUS, FAHRENHEIT
-} from './constants';
+  CELCIUS, FAHRENHEIT,
+  CITY_NAME_VALIDATION_STATUS, CITY_ID_VALIDATION_STATUS,
+} from './constants'
 
-// Returns 1 if valid
-// Returns 2 if empty
-// Returns 3 if non alphabets
-// Returns 4 if invalid comma
 export const validateCityName = (cityName) => {
-  if (cityName === '') return 2;
+  if (cityName === '') return CITY_NAME_VALIDATION_STATUS.EMPTY;
   let alphabetsCheck = /^[a-z][a-z/\s,]*$/i.test(cityName);
   let commaCheck = /^[^,]+,[^,]+$/.test(cityName);
   if (cityName.indexOf(',') !== -1) {
-    if (!commaCheck) return 3;
+    if (!commaCheck) {
+      return CITY_NAME_VALIDATION_STATUS.INVALID_COMMA;
+    }
   }
-  if (!(alphabetsCheck)) return 4;
-  return 1;
+  if (!(alphabetsCheck)) return CITY_NAME_VALIDATION_STATUS.NON_ALPHABET;
+  return CITY_NAME_VALIDATION_STATUS.SUCCESS;
 }
 
-// Returns 1 if valid
-// Returns 2 if empty
-// Returns 4 if non numbers
 export const validateCityId = (cityId) => {
-  if (cityId === '') return 2;
+  if (cityId === '') return CITY_ID_VALIDATION_STATUS.EMPTY;
   let numbersCheck = /^[0-9]+$/.test(cityId);
-  if (!numbersCheck) return 4;
-  return 1;
+  if (!numbersCheck) return CITY_ID_VALIDATION_STATUS.NON_NUMBER;
+  return CITY_ID_VALIDATION_STATUS.SUCCESS;
 }
 
 export const setDataWeatherPostUrl = (

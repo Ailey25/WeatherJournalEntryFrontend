@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+
 import { CREATE } from './constants';
 import { calcTemp } from './utility.js';
 

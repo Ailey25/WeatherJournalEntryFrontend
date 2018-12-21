@@ -1,3 +1,6 @@
+// home
+export const TOGGLE_TEMP_UNIT = 'TOGGLE_TEMP_UNIT';
+
 // journal entry list
 export const ADD_TO_JOURNAL_LIST = 'ADD_TO_JOURNAL_LIST';
 export const EDIT_JOURNAL_LIST = 'EDIT_JOURNAL_LIST';

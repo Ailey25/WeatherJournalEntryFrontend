@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   CREATE, EDIT, CITY_ID, CITY_NAME
 } from './constants'
