@@ -4,26 +4,24 @@ import { withRouter } from 'react-router-dom';
 import 'babel-polyfill';
 import uuidv4 from 'uuid/v4';
 
-import WeatherStampContainer from './WeatherStampContainer';
+import WeatherStampContainer from '../WeatherStamp/index';
+import JournalHeader from './JournalHeader/index';
+import JournalBody from './JournalBody/index';
+import JournalPostWeatherDataInputs from './JournalPostWeatherDataInputs/index';
+import JournalPostWeatherDataResults from './JournalPostWeatherDataResults/index';
 import {
   CREATE, EDIT,
   CITY_ID, CITY_NAME,
   BASE_URL,
   CITY_NAME_VALIDATION_STATUS, CITY_NAME_VALIDATION_MESSAGE,
   CITY_ID_VALIDATION_STATUS, CITY_ID_VALIDATION_MESSAGE,
-} from './constants'
-import {
-  JournalHeader,
-  JournalBody,
-  JournalPostWeatherDataInputs,
-  JournalPostWeatherDataResults,
-} from './Journal';
-import { setJournalMode } from './redux/actions';
-import { postWeatherData, setErrorObject } from './redux/postWeatherAPIActions';
+} from '../constants'
+import { setJournalMode } from '../redux/actions';
+import { postWeatherData, setErrorObject } from '../redux/postWeatherAPIActions';
 import {
   validateCityName, validateCityId,
   setDataWeatherPostUrl
-} from './utility';
+} from '../utility';
 
 class JournalContainer extends Component {
   constructor(props) {

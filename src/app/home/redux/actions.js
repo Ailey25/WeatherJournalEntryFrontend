@@ -27,8 +27,8 @@ export const editJournalList = (journalEntry, index) => ({
   index
 });
 
-// weather journal
-export const setJournalMode = (mode) => ({
-  type: types.JOURNAL_MODE,
-  mode
+// Login
+export const setIsLoggedIn = (bool) => ({
+  type: types.SET_IS_LOGGED_IN,
+  isLoggedIn: bool,
 });

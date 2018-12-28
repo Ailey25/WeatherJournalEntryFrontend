@@ -19,7 +19,7 @@ const JournalList = (props) => {
               <li key={journal.id}>
                 <span>
                   <label>{journal.title} </label>
-                  <Link to={'/journal-entry/edit/' + journal.id}>Edit</Link>
+                  <Link to={'/private/journal-entry/edit/' + journal.id}>Edit</Link>
                 </span>
               </li>
             ))
@@ -30,4 +30,4 @@ const JournalList = (props) => {
   }
 }
 
-export { JournalList }
+export default JournalList;

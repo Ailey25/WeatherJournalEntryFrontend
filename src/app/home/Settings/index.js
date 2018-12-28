@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 
-import { CELCIUS, FAHRENHEIT } from './constants';
-import { toggleTempUnit } from './redux/actions';
-import JournalListContainer from './JournalListContainer';
-import { ToggleTemperatureUnit } from './Settings';
+import { CELCIUS, FAHRENHEIT } from '../constants';
+import { toggleTempUnit } from '../redux/actions';
+import JournalListContainer from '../JournalList/index';
+import { ToggleTemperatureUnit } from './ToggleTemperatureUnit/index';
 
 class SettingsContainer extends Component {
   componentDidMount() {

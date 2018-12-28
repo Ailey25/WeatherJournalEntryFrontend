@@ -2,6 +2,10 @@ import * as types from './types';
 import { CELCIUS } from '../constants';
 
 // Initial States
+const userInfoInitialState = {
+  isLoggedIn: false,
+};
+
 const globalVariablesInitialState = {
   tempUnit: CELCIUS,
 };
@@ -16,7 +20,6 @@ const weatherStampInitialState = {
   isLoading: false,
 }
 const journalInitialState = {
-  mode: '',
   isPosting: false,
   response: {
     ok: false,
@@ -26,6 +29,17 @@ const journalInitialState = {
     message: '',
   }
 }
+
+export const userInfoReducer = (state = userInfoInitialState, action) => {
+  switch(action.type) {
+    case types.SET_IS_LOGGED_IN:
+      return {
+        isLoggedIn: action.isLoggedIn,
+      };
+    default:
+      return state;
+  }
+};
 
 export const globalVariablesReducer = (state = globalVariablesInitialState, action) => {
   switch(action.type) {
@@ -96,11 +110,6 @@ export const weatherStampReducer = (state = weatherStampInitialState, action) =>
 
 export const journalReducer = (state=journalInitialState, action) => {
   switch(action.type) {
-    case types.JOURNAL_MODE:
-      return {
-        ...state,
-        mode: action.mode,
-      };
     case types.WEATHER_DATA_IS_POSTING:
       return {
         ...state,

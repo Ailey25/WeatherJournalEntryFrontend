@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { CREATE } from './constants';
-import { calcTemp } from './utility.js';
+import { CREATE } from '../../constants';
+import { calcTemp } from '../../utility.js';
 
 const WeatherStamp = (props) => {
   if (props.mode === CREATE) return null;

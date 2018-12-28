@@ -1,3 +1,9 @@
+export const BASE_URL = '/api/values';
+
+// Login
+export const BUTTON = 'BUTTON';
+export const FORM = 'FORM';
+
 // home
 export const TOGGLE_TEMP_UNIT = 'TOGGLE_TEMP_UNIT';
 
@@ -41,5 +47,3 @@ export const CITY_ID_VALIDATION_MESSAGE = {
 // weather stamp
 export const CELCIUS = 'C';
 export const FAHRENHEIT = 'F';
-
-export const BASE_URL = '/api/values';

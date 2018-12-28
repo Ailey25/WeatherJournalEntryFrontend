@@ -13,8 +13,9 @@ export const MAIN_SUCCESS = 'MAIN_SUCCESS';
 export const WEATHER_SUCCESS = 'WEATHER_SUCCESS';
 
 // journal entry
-export const JOURNAL_MODE = 'JOURNAL_MODE';
-
 export const WEATHER_DATA_IS_POSTING = 'WEATHER_DATA_IS_POSTING';
 export const WEATHER_DATA_ERROR = 'WEATHER_DATA_ERROR';
 export const WEATHER_DATA_POST_SUCCESS = 'WEATHER_DATA_POST_SUCCESS';
+
+// login/logout
+export const SET_IS_LOGGED_IN = 'SET_IS_LOGGED_IN';

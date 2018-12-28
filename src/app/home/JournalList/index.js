@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import {
-  addToJournalList,
-  editJournalList
-} from './redux/actions'
-import { JournalList } from './JournalList';
-import JournalContainer from './JournalContainer';
-import SettingsContainer from './SettingsContainer';
+import { addToJournalList, editJournalList } from '../redux/actions'
+import JournalList from './JournalList/index';
+import JournalContainer from '../Journal/index';
+import SettingsContainer from '../Settings/index';
 
 class JournalListContainer extends Component {
   addJournal = (journalObject) => {
@@ -37,16 +34,21 @@ class JournalListContainer extends Component {
     const component = this;
     return (
       <div>
-        <Route exact path="/" render={() => (
+        <ul>
+          <li><Link to="/private">See all journal entries</Link></li>
+          <li><Link to="/private/journal-entry/create">Create new journal entry</Link></li>
+          <li><Link to="/private/settings">Settings</Link></li>
+        </ul>
+        <Route exact path="/private" render={() => (
           <JournalList journalList={component.props.journalList} />
         )} />
-        <Route path="/journal-entry/:mode/:id?" render={(props) => (
+        <Route path="/private/journal-entry/:mode/:id?" render={(props) => (
           <JournalContainer key={props.match.params.mode} {...props}
             addJournalEntry = {component.addJournal}
             editJournalEntry = {component.editJournal}
             getJournalEntry = {component.getJournal} />
         )} />
-        <Route path ="/settings" render={() => (
+        <Route path ="/private/settings" render={() => (
           <SettingsContainer />
         )} />
       </div>
