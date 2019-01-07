@@ -3,7 +3,11 @@ import { CELCIUS } from '../constants';
 
 // Initial States
 const userInfoInitialState = {
-  isLoggedIn: false,
+  isAuthenticating: false,
+  userStatus: {
+    status: false,
+    message: '',
+  },
 };
 
 const globalVariablesInitialState = {
@@ -27,14 +31,20 @@ const journalInitialState = {
   error: {
     status: '',
     message: '',
-  }
+  },
 }
 
 export const userInfoReducer = (state = userInfoInitialState, action) => {
   switch(action.type) {
-    case types.SET_IS_LOGGED_IN:
+    case types.USER_IS_AUTHENTICATING:
       return {
-        isLoggedIn: action.isLoggedIn,
+        ...state,
+        isAuthenticating: action.isAuthenticating,
+      };
+    case types.USER_STATUS:
+      return {
+        ...state,
+        userStatus: action.userStatus
       };
     default:
       return state;
@@ -45,6 +55,7 @@ export const globalVariablesReducer = (state = globalVariablesInitialState, acti
   switch(action.type) {
     case types.TOGGLE_TEMP_UNIT:
       return {
+        ...state,
         tempUnit: action.tempUnit,
       };
     default:
@@ -78,7 +89,7 @@ export const weatherStampReducer = (state = weatherStampInitialState, action) =>
         ...state,
         isLoading: action.isLoading,
       };
-    case types.WEATHER_OBJECT_SUCCESS:
+    case types.WEATHER_OBJECT_GET_SUCCESS:
       return {
         ...state,
         weatherObject: {
@@ -86,14 +97,14 @@ export const weatherStampReducer = (state = weatherStampInitialState, action) =>
           cityName: action.weatherObject.cityName,
         },
       };
-    case types.MAIN_SUCCESS:
+    case types.MAIN_GET_SUCCESS:
       return {
         ...state,
         main: {
           temp: action.main.temp,
         },
       };
-    case types.WEATHER_SUCCESS:
+    case types.WEATHER_GET_SUCCESS:
       return {
         ...state,
         weather: action.weather,

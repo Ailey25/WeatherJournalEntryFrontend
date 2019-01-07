@@ -1,5 +1,5 @@
-import * as types from './types';
-import { BASE_URL } from '../constants';
+import * as types from '../types';
+import { BASE_URL } from '../../constants';
 
 export const fetchWeatherStampInfo = (id) => (
   async dispatch => {
@@ -68,7 +68,7 @@ const weatherStampError = (error) => ({
 });
 
 const weatherObjectSuccess = (data) => ({
-  type: types.WEATHER_OBJECT_SUCCESS,
+  type: types.WEATHER_OBJECT_GET_SUCCESS,
   weatherObject: {
     cityId: data.id,
     cityName: data.name,
@@ -76,13 +76,13 @@ const weatherObjectSuccess = (data) => ({
 });
 
 const mainSuccess = (data) => ({
-  type: types.MAIN_SUCCESS,
+  type: types.MAIN_GET_SUCCESS,
   main: {
     temp: data.temp,
   }
 });
 
 const weatherSuccess = (data) => ({
-  type: types.WEATHER_SUCCESS,
+  type: types.WEATHER_GET_SUCCESS,
   weather: data,
 });

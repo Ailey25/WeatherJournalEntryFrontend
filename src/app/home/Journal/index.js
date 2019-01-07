@@ -16,8 +16,8 @@ import {
   CITY_NAME_VALIDATION_STATUS, CITY_NAME_VALIDATION_MESSAGE,
   CITY_ID_VALIDATION_STATUS, CITY_ID_VALIDATION_MESSAGE,
 } from '../constants'
-import { setJournalMode } from '../redux/actions';
-import { postWeatherData, setErrorObject } from '../redux/postWeatherAPIActions';
+import { setJournalMode } from '../redux/actions/actions';
+import { postWeatherData, setErrorObject } from '../redux/actions/postWeatherAPI';
 import {
   validateCityName, validateCityId,
   setDataWeatherPostUrl

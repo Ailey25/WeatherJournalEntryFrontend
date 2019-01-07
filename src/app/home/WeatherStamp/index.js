@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import 'babel-polyfill';
 
 import { WeatherStamp } from './WeatherStamp/index';
-import { fetchWeatherStampInfo } from  '../redux/getWeatherAPIActions';
+import { fetchWeatherStampInfo } from  '../redux/actions/getWeatherAPI';
 import { EDIT, CELCIUS, BASE_URL } from '../constants'
 
 class WeatherStampContainer extends Component {

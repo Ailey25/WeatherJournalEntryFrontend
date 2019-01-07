@@ -2,18 +2,26 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import LoginForm from './LoginForm/index';
-import { USERNAME, PASSWORD } from '../constants';
+import RegisterForm from './RegisterForm/index';
+import { BASE_URL } from '../constants';
 import {
-  login,
+  USERNAME,
+  FIRSTNAME,
+  LASTNAME,
+  PASSWORD
+} from '../constants';
+import {
+  registerUser,
   setUserStatus
 } from '../redux/actions/userService';
 
-class LoginContainer extends Component {
+class RegisterContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
+      firstname: '',
+      lastname: '',
       password: '',
     }
 
@@ -29,11 +37,17 @@ class LoginContainer extends Component {
       case USERNAME:
         this.setState({ username: e.currentTarget.value });
         break;
+      case FIRSTNAME:
+        this.setState({ firstname: e.currentTarget.value });
+        break;
+      case LASTNAME:
+        this.setState({ lastname: e.currentTarget.value });
+        break;
       case PASSWORD:
         this.setState({ password: e.currentTarget.value });
         break;
       default:
-        console.log('Login form handleChange: id ' +
+        console.log('Register form handleChange: id ' +
                     e.currentTarget.id + ' not recognized');
         break;
     }
@@ -42,9 +56,16 @@ class LoginContainer extends Component {
   async handleSubmit(e) {
     e.preventDefault();
 
-    await this.props.login(this.state.username, this.state.password);
+    const user = {
+      username: this.state.username,
+      firstname: this.state.firstname,
+      lastname: this.state.lastname,
+      password: this.state.password,
+    };
 
-    // redirect to private page if logged in successfully
+    await this.props.registerUser(user);
+
+    // redirect to private page if registers successfully
     if (this.props.userStatus !== undefined) {
       if (this.props.userStatus.status) this.props.history.push("/private");
     }
@@ -60,8 +81,10 @@ class LoginContainer extends Component {
     const component = this;
     return (
       <div>
-        <LoginForm
+        <RegisterForm
           username={component.state.username}
+          firstname={component.state.firstname}
+          lastname={component.state.lastname}
           password={component.state.password}
           handleSubmit={(e) => component.handleSubmit(e)}
           handleChange={(e) => component.handleChange(e)}
@@ -84,12 +107,12 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  login: (username, password) =>
-    dispatch(login(username, password)),
+  registerUser: (user) =>
+    dispatch(registerUser(user)),
   resetMessage: () =>
     dispatch(setUserStatus({ status: true, message: '' })),
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(LoginContainer)
+  connect(mapStateToProps, mapDispatchToProps)(RegisterContainer)
 );

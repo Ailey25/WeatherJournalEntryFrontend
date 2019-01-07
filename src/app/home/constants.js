@@ -1,15 +1,19 @@
 export const BASE_URL = '/api/values';
 
-// Login
-export const BUTTON = 'BUTTON';
-export const FORM = 'FORM';
+// Login and register
+// also used as input ids for login/register so " " instead of ' '
+export const USERNAME = "username";
+export const FIRSTNAME = "firstname";
+export const LASTNAME = "lastname";
+export const PASSWORD = "password";
 
 // home
 export const TOGGLE_TEMP_UNIT = 'TOGGLE_TEMP_UNIT';
 
-// journal entry
-export const CREATE = 'create';
-export const EDIT = 'edit';
+// journal
+// also used as input ids for journal so " " instead of ' '
+export const CREATE = "create";
+export const EDIT = "edit";
 export const CITY_ID = 'CITY_ID';
 export const CITY_NAME = 'CITY_NAME';
 

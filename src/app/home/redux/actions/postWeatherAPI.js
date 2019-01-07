@@ -1,5 +1,5 @@
-import * as types from './types';
-import { BASE_URL } from '../constants';
+import * as types from '../types';
+import { BASE_URL } from '../../constants';
 
 export const postWeatherData = (fetchUrl) => (
   async dispatch => {

@@ -3,7 +3,7 @@ import { Route, Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import { addToJournalList, editJournalList } from '../redux/actions'
+import { addToJournalList, editJournalList } from '../redux/actions/actions';
 import JournalList from './JournalList/index';
 import JournalContainer from '../Journal/index';
 import SettingsContainer from '../Settings/index';

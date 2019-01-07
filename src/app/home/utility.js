@@ -18,14 +18,14 @@ export const validateCityName = (cityName) => {
   }
   if (!(alphabetsCheck)) return CITY_NAME_VALIDATION_STATUS.NON_ALPHABET;
   return CITY_NAME_VALIDATION_STATUS.SUCCESS;
-}
+};
 
 export const validateCityId = (cityId) => {
   if (cityId === '') return CITY_ID_VALIDATION_STATUS.EMPTY;
   let numbersCheck = /^[0-9]+$/.test(cityId);
   if (!numbersCheck) return CITY_ID_VALIDATION_STATUS.NON_NUMBER;
   return CITY_ID_VALIDATION_STATUS.SUCCESS;
-}
+};
 
 export const setDataWeatherPostUrl = (
   mode, callType, weatherObjectId, callParamsString='', cityId=''
@@ -64,7 +64,7 @@ export const setDataWeatherPostUrl = (
     } catch (err) {
       console.log('Error in setDataWeatherPostUrl: ' + err);
     }
-}
+};
 
 export const calcTemp = (tempInKelvin, toUnit) => {
   if (toUnit === CELCIUS) {
@@ -76,4 +76,19 @@ export const calcTemp = (tempInKelvin, toUnit) => {
     tempFahrenheit = Math.round(tempFahrenheit * 100) / 100;
     return tempFahrenheit;
   }
-}
+};
+
+export const authenticationHeader = () => {
+  let user = JSON.parse(localStorage.getItem('user'));
+
+  if (user && user.token) {
+      return { 'Authorization': 'Bearer ' + user.token };
+  } else {
+      return {};
+  }
+};
+
+export const isUserLoggedIn = () => {
+  if (localStorage.getItem('token')) return true;
+  return false;
+};

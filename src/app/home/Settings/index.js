@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 
 import { CELCIUS, FAHRENHEIT } from '../constants';
-import { toggleTempUnit } from '../redux/actions';
+import { toggleTempUnit } from '../redux/actions/actions';
 import JournalListContainer from '../JournalList/index';
 import { ToggleTemperatureUnit } from './ToggleTemperatureUnit/index';
 
