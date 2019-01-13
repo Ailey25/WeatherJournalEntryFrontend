@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import { logout } from '../redux/actions/userService';
-import { isUserLoggedIn } from '../utility';
+import { isUserLoggedIn, logout } from '../utility';
 import LogoutButton from './LogoutButton/index';
 import RegisterButton from './RegisterButton/index';
 
@@ -11,7 +10,7 @@ class UserStateButtonContainer extends Component {
     switch(e.currentTarget.id) {
       case 'logout':
         logout();
-        location.reload(true);
+        this.props.history.push("/");
         return;
       case 'register':
         this.props.history.push("/register");

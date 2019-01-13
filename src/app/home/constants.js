@@ -1,4 +1,5 @@
 export const BASE_URL = '/api/values';
+export const STATUS_CODE_UNAUTHORIZED = '401';
 
 // Login and register
 // also used as input ids for login/register so " " instead of ' '

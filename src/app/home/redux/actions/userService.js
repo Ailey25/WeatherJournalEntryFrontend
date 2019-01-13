@@ -17,20 +17,21 @@ export const login = (username, password) => {
       .then(data => {
         if (data.ok) {
           localStorage.setItem('token', JSON.stringify(data.user.Token));
-          dispatch(setUserStatus({ status: true, message: 'Success: user is logged in' }));
+          localStorage.setItem('userId', JSON.stringify(data.user.Id));
+          dispatch(setMessageObject({ ok: true, message: 'User is logged in' }));
         } else {
-          dispatch(setUserStatus({ status: false, message: data.message }));
+          dispatch(setMessageObject({ ok: false, message: data.message }));
         }
         dispatch(setIsAuthenticating(false));
       })
       .catch(error => {
-        dispatch(setUserStatus({ status: false, message: error }));
+        dispatch(setMessageObject({ ok: false, message: error }));
         dispatch(setIsAuthenticating(false));
       });
   }
 };
 
-export const registerUser = (user) => {
+export const register = (user) => {
   const requestOptions = {
     method: 'POST',
     headers: { ...authenticationHeader(), 'Content-Type': 'application/json' },
@@ -43,15 +44,14 @@ export const registerUser = (user) => {
       .then(response => response.json())
       .then(data => {
         if (data.ok) {
-          localStorage.setItem('token', JSON.stringify(data.user.Token));
-          dispatch(setUserStatus({ status: true, message: 'Success: user is registered' }));
+          dispatch(setMessageObject({ ok: true, message: 'User is registered' }));
         } else {
-          dispatch(setUserStatus({ status: false, message: data.message }));
+          dispatch(setMessageObject({ ok: false, message: data.message }));
         }
         dispatch(setIsAuthenticating(false));
       })
       .catch(error => {
-        dispatch(setUserStatus({ status: false, message: error }));
+        dispatch(setMessageObject({ ok: false, message: error }));
         dispatch(setIsAuthenticating(false));
       });
   }
@@ -69,11 +69,11 @@ export const registerUser = (user) => {
 //     await fetch(BASE_URL + '/user/' + user.id, requestOptions)
 //       .then(response => response.json())
 //       .then(data => {
-//         dispatch(setUserStatus({ success: true, message: 'Success: user updated' }));
+//         dispatch(setUserStatus({ ok: true, message: 'User updated' }));
 //         dispatch(setIsAuthenticating(false));
 //       })
 //       .catch(error => {
-//         dispatch(setUserStatus({ success: false, message: error }));
+//         dispatch(setUserStatus({ ok: false, message: error }));
 //         dispatch(setIsAuthenticating(false));
 //       });
 //     }
@@ -99,10 +99,6 @@ export const registerUser = (user) => {
 //       });
 //     }
 // };
-
-export const logout = () => {
-  localStorage.removeItem('token');
-};
 
 // export const deleteUser = (id) => {
 //   const requestOptions = {
@@ -138,10 +134,15 @@ const setIsAuthenticating = (bool) => ({
   isAuthenticating: bool,
 });
 
-export const setUserStatus = (userStatusObject) => ({
+// const setUser = (user) => ({  // call when get user
+//   type: types.USER_GET_SUCCESS,
+//   username: user.Username,
+//   firstname: user.Firstname,
+//   lastname: user.Lastname,
+// });
+
+export const setMessageObject = ({ ok, message = '' }) => ({
   type: types.USER_STATUS,
-  userStatus: {
-    status: userStatusObject.status,
-    message: userStatusObject.message,
-  },
+	ok,
+	message
 });

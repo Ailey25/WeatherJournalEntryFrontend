@@ -79,10 +79,10 @@ export const calcTemp = (tempInKelvin, toUnit) => {
 };
 
 export const authenticationHeader = () => {
-  let user = JSON.parse(localStorage.getItem('user'));
+  let token = JSON.parse(localStorage.getItem('token'));
 
-  if (user && user.token) {
-      return { 'Authorization': 'Bearer ' + user.token };
+  if (token) {
+      return { 'Authorization': 'Bearer ' + token };
   } else {
       return {};
   }
@@ -91,4 +91,31 @@ export const authenticationHeader = () => {
 export const isUserLoggedIn = () => {
   if (localStorage.getItem('token')) return true;
   return false;
+};
+
+export const getUserId = () => {
+  return JSON.parse(localStorage.getItem('userId'));
+};
+
+export const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
+};
+
+export const formatJournalsForFrontend = (journals) => {
+  return journals.map(journal => ({
+    id: journal.JournalId,
+    title: journal.Title,
+    entry: journal.Entry,
+    cityId: journal.CityId,
+  }));
+};
+
+export const formatJournalsForBackend = (journalList) => {
+  return journalList.map(journal => ({
+    JournalId: journal.id,
+    Title: journal.title,
+    Entry: journal.entry,
+    CityId: journal.cityId,
+  }));
 };

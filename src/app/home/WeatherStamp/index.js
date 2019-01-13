@@ -4,13 +4,29 @@ import { withRouter } from 'react-router-dom';
 import 'babel-polyfill';
 
 import { WeatherStamp } from './WeatherStamp/index';
-import { fetchWeatherStampInfo } from  '../redux/actions/getWeatherAPI';
-import { EDIT, CELCIUS, BASE_URL } from '../constants'
+import {
+  fetchWeatherStampInfo,
+  weatherStampError
+} from  '../redux/actions/getWeatherAPI';
+import { logout } from '../redux/actions/userService';
+import {
+  EDIT,
+  CELCIUS,
+  BASE_URL
+} from '../constants'
+import { getUserId } from '../utility';
 
 class WeatherStampContainer extends Component {
   async componentDidMount() {
+    this.props.resetWeatherStampError();
     if (this.props.mode === EDIT) {
       await this.props.getWeatherData(this.props.id);
+    }
+  }
+
+  componentDidUpdate() {
+    if (!(getUserId())) {
+      this.props.history.push("/");
     }
   }
 
@@ -29,7 +45,7 @@ class WeatherStampContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  tempUnit: state.globalVariablesReducer.tempUnit,
+  tempUnit: state.settingsReducer.tempUnit,
   weatherObject: {
     cityName: state.weatherStampReducer.weatherObject.cityName,
     cityId: state.weatherStampReducer.weatherObject.cityId,
@@ -43,7 +59,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getWeatherData: (id) =>
-    dispatch(fetchWeatherStampInfo(id))
+    dispatch(fetchWeatherStampInfo(id)),
+  resetWeatherStampError: () =>
+    dispatch(weatherStampError({})),
 });
 
 export default withRouter(

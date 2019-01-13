@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import {
   userInfoReducer,
-  globalVariablesReducer,
+  settingsReducer,
   journalListReducer,
   weatherStampReducer,
   journalReducer,
@@ -9,7 +9,7 @@ import {
 
 const rootReducer = combineReducers({
   userInfoReducer,
-  globalVariablesReducer,
+  settingsReducer,
   journalListReducer,
   weatherStampReducer,
   journalReducer,

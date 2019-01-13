@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
 
 import AppDescription from './AppDescription/index';
-import LoginContainer from '../Login/index';
 import UserStateButtonContainer from '../UserStateButton/index';
 import { BUTTON } from '../constants';
 

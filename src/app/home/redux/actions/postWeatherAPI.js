@@ -1,5 +1,6 @@
 import * as types from '../types';
 import { BASE_URL } from '../../constants';
+import { authenticationHeader/*, logout*/ } from '../../utility';
 
 export const postWeatherData = (fetchUrl) => (
   async dispatch => {
@@ -8,17 +9,28 @@ export const postWeatherData = (fetchUrl) => (
 );
 
 const fetchWeatherDataPost = (fetchUrl) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: { ...authenticationHeader(), 'Content-Type': 'application/json' },
+  };
+
   return async dispatch => {
     dispatch(weatherDataIsPosting(true));
-    await fetch(fetchUrl, {method: 'POST'})
+    await fetch(fetchUrl, requestOptions)
       .then(response => {
-        if (response.ok) {
-          dispatch(weatherDataPostSuccess(response));
+        if (response.status === 401) {
+          logout();
+        }
+        return response.json()
+      })
+      .then(data => {
+        if (data.ok) {
+          dispatch(weatherDataPostSuccess(JSON.parse(data.weatherObjectStr)));
         }
         dispatch(weatherDataIsPosting(false));
       })
       .catch((error) => {
-        dispatch(setErrorObject(error));
+        dispatch(setErrorObject({ ok: false, message: error.message }));
         dispatch(weatherDataIsPosting(false));
       })
   }
@@ -29,15 +41,13 @@ const weatherDataIsPosting = (bool) => ({
   isPosting: bool
 });
 
-export const setErrorObject = (error) => ({
+export const setErrorObject = ({ ok = false, message = '' }) => ({
   type: types.WEATHER_DATA_ERROR,
-  error: {
-    status: error.status,
-    message: error.message,
-  }
+  ok,
+  message,
 });
 
-const weatherDataPostSuccess = (response) => ({
+const weatherDataPostSuccess = (weatherObject) => ({
   type: types.WEATHER_DATA_POST_SUCCESS,
-  response
+  cityId: weatherObject.id
 });

@@ -4,54 +4,69 @@ import { CELCIUS } from '../constants';
 // Initial States
 const userInfoInitialState = {
   isAuthenticating: false,
-  userStatus: {
-    status: false,
-    message: '',
-  },
+  username: '',
+  firstname: '',
+  lastname: '',
+  ok: false,
+  message: '',
 };
 
-const globalVariablesInitialState = {
+const settingsInitialState = {
   tempUnit: CELCIUS,
+  isPosting: false,
+  isLoading: false,
+  ok: false,
+  message: '',
 };
 
 const journalListInitialState = {
   journalList: [],
+  isPosting: false,
+  isLoading: false,
+  ok: false,
+  message: '',
 }
 const weatherStampInitialState = {
+  isLoading: false,
+  status: '',
+  message: '',
   weatherObject: {},
   main: {},
   weather: [],
-  isLoading: false,
 }
 const journalInitialState = {
   isPosting: false,
-  response: {
-    ok: false,
-  },
-  error: {
-    status: '',
-    message: '',
-  },
+  cityId: '',
+  ok: false,
+  message: '',
 }
 
 export const userInfoReducer = (state = userInfoInitialState, action) => {
   switch(action.type) {
     case types.USER_IS_AUTHENTICATING:
       return {
+         ...state,
+         isAuthenticating: action.isAuthenticating,
+      };
+    case types.USER_GET_SUCCESS:
+      return {
         ...state,
-        isAuthenticating: action.isAuthenticating,
+        username: action.username,
+        firstname: action.username,
+        lastname: action.lastname,
       };
     case types.USER_STATUS:
       return {
         ...state,
-        userStatus: action.userStatus
+        ok: action.ok,
+        message: action.message,
       };
     default:
       return state;
-  }
+   }
 };
 
-export const globalVariablesReducer = (state = globalVariablesInitialState, action) => {
+export const settingsReducer = (state = settingsInitialState, action) => {
   switch(action.type) {
     case types.TOGGLE_TEMP_UNIT:
       return {
@@ -65,17 +80,40 @@ export const globalVariablesReducer = (state = globalVariablesInitialState, acti
 
 export const journalListReducer = (state = journalListInitialState, action) => {
   switch(action.type) {
+    case types.JOURNAL_LIST_GET_SUCCESS:
+      return {
+        ...state,
+        journalList: action.journalList,
+      };
+    case types.JOURNAL_LIST_IS_POSTING:
+      return {
+        ...state,
+        isPosting: action.isPosting,
+      }
+    case types.JOURNAL_LIST_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
     case types.ADD_TO_JOURNAL_LIST:
       return {
+        ...state,
         journalList: [...state.journalList, action.journalEntry]
       };
     case types.EDIT_JOURNAL_LIST:
       return {
+        ...state,
         journalList: [
           ...state.journalList.slice(0, action.index),
           action.journalEntry,
           ...state.journalList.slice(action.index+1)
         ]
+      };
+    case types.JOURNAL_LIST_STATUS:
+      return {
+        ...state,
+        ok: action.status,
+        message: action.message,
       };
     default:
       return state;
@@ -112,7 +150,8 @@ export const weatherStampReducer = (state = weatherStampInitialState, action) =>
     case types.WEATHER_STAMP_ERROR:
       return {
         ...state,
-        error: action.error,
+        status: action.status,
+        message: action.message,
       };
     default:
       return state;
@@ -129,20 +168,14 @@ export const journalReducer = (state=journalInitialState, action) => {
     case types.WEATHER_DATA_ERROR:
       return {
         ...state,
-        response: {
-          ok: false,
-        },
-        error: {
-          status: action.error.status,
-          message: action.error.message,
-        }
+        ok: action.ok,
+        message: action.message,
       };
     case types.WEATHER_DATA_POST_SUCCESS:
      return {
        ...state,
-       response: {
-         ok: action.response.ok,
-       },
+       cityId: action.cityId,
+       ok: true,
      };
     default:
       return state;

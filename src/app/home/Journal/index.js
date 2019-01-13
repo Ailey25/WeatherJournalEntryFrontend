@@ -18,9 +18,12 @@ import {
 } from '../constants'
 import { setJournalMode } from '../redux/actions/actions';
 import { postWeatherData, setErrorObject } from '../redux/actions/postWeatherAPI';
+import { logout } from '../redux/actions/userService';
 import {
-  validateCityName, validateCityId,
-  setDataWeatherPostUrl
+  validateCityName,
+  validateCityId,
+  setDataWeatherPostUrl,
+  getUserId,
 } from '../utility';
 
 class JournalContainer extends Component {
@@ -33,7 +36,6 @@ class JournalContainer extends Component {
       callType: CITY_NAME,
       callParamsString: [],
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -51,7 +53,13 @@ class JournalContainer extends Component {
         callType: CITY_ID,
       });
     } else {
-      setErrorMessage('Journal mode not recognized');
+      this.props.setErrorMessage('Journal mode not recognized');
+    }
+  }
+
+  componentDidUpdate() {
+    if (!(getUserId())) {
+       this.props.history.push("/");
     }
   }
 
@@ -90,9 +98,9 @@ class JournalContainer extends Component {
     }
   }
 
-  async handleSubmit(e) {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    //console.log('here: ' + this.state.callType + ': ' + this.state.callParamsString);
+
     if (this.props.match.params.mode === CREATE) {
       if (!this.validateSubmission()) return;
     }
@@ -108,7 +116,7 @@ class JournalContainer extends Component {
 
     await this.props.postWeatherData(fetchUrl);
 
-    if (this.props.response.ok) {
+    if (this.props.ok) {
       if (this.updateJournalEntryList()) {
         this.resetState();
       }
@@ -127,7 +135,9 @@ class JournalContainer extends Component {
       id: this.state.id,
       title: this.state.title,
       entry: this.state.entry,
+      cityId: this.props.cityId,
     };
+
     switch(this.props.match.params.mode) {
       case CREATE:
         this.props.addJournalEntry(journalObject);
@@ -159,14 +169,14 @@ class JournalContainer extends Component {
   }
 
 
-resetState = () => {
-  if (this.props.match.params.mode === CREATE) this.setState({ id: uuidv4() })
-  this.setState({
-    title: '',
-    entry: '',
-  });
-  this.props.setErrorMessage('');
-}
+  resetState = () => {
+    if (this.props.match.params.mode === CREATE) this.setState({ id: uuidv4() })
+    this.setState({
+      title: '',
+      entry: '',
+    });
+    this.props.setErrorMessage('');
+  }
 
   render() {
     const component = this;
@@ -196,7 +206,7 @@ resetState = () => {
         </form>
         <JournalPostWeatherDataResults
           isLoading={component.props.isPosting}
-          message={component.props.error.message}
+          message={component.props.message}
         />
       </div>
     );
@@ -205,23 +215,17 @@ resetState = () => {
 
 const mapStateToProps = (state) => ({
   weatherObject: state.weatherStampReducer.weatherObject,
+  cityId: state.journalReducer.cityId,
   isPosting: state.journalReducer.isPosting,
-  response: {
-    ok: state.journalReducer.response.ok,
-  },
-  error: {
-    status: state.journalReducer.error.status,
-    message: state.journalReducer.error.message,
-  }
+  ok: state.journalReducer.ok,
+  message: state.journalReducer.message,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // setJournalMode: (mode) =>
-  //   dispatch(setJournalMode(mode)),
   postWeatherData: (fetchUrl) =>
     dispatch(postWeatherData(fetchUrl)),
   setErrorMessage: (errorMessage) =>
-    dispatch(setErrorObject({status:'', message: errorMessage})),
+    dispatch(setErrorObject({ message: errorMessage })),
 });
 
 export default withRouter(

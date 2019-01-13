@@ -27,6 +27,7 @@ class SettingsContainer extends Component {
     const component = this;
     return(
       <div>
+        <h2>Settings</h2>
         <ToggleTemperatureUnit
           tempUnit={component.props.tempUnit}
           handleClick={(e) => component.handleClick(e)}/>
@@ -36,7 +37,7 @@ class SettingsContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  tempUnit: state.globalVariablesReducer.tempUnit,
+  tempUnit: state.settingsReducer.tempUnit,
 });
 
 const mapDispatchToProps = (dispatch) => ({
