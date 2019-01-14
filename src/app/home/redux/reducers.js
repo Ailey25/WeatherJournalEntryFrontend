@@ -73,6 +73,24 @@ export const settingsReducer = (state = settingsInitialState, action) => {
         ...state,
         tempUnit: action.tempUnit,
       };
+    case types.SETTINGS_IS_POSTING:
+      return {
+
+      };
+    case types.SETTINGS_IS_LOADING:
+      return {
+
+      };
+    case types.SETTINGS_GET_SUCCESS:
+      return {
+        
+      };
+    case types.SETTINGS_STATUS:
+      return {
+        ...state,
+        ok: action.ok,
+        message: action.message,
+      };
     default:
       return state;
   }

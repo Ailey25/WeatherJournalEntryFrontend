@@ -1,14 +1,18 @@
 export const BASE_URL = '/api/values';
 export const STATUS_CODE_UNAUTHORIZED = '401';
 
-// Login and register
+// Login and register and settings
 // also used as input ids for login/register so " " instead of ' '
 export const USERNAME = "username";
 export const FIRSTNAME = "firstname";
 export const LASTNAME = "lastname";
 export const PASSWORD = "password";
+export const CONFIRM_PASSWORD = 'confirm-password';
+export const NEW_PASSWORD = 'new-password';
+export const OLD_PASSWORD = 'old-password';
+export const NEW_USERNAME = "new-username";
+export const DELETE_ACCOUNT = "delete-account";
 
-// home
 export const TOGGLE_TEMP_UNIT = 'TOGGLE_TEMP_UNIT';
 
 // journal

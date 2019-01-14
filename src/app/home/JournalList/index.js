@@ -7,7 +7,7 @@ import JournalList from './JournalList/index';
 import SaveJournalListButton from './SaveJournalListButton/index';
 import { addToJournalList, editJournalList } from '../redux/actions/actions';
 import JournalContainer from '../Journal/index';
-import SettingsContainer from '../Settings/index';
+import UserSettingsContainer from '../UserSettings/index';
 import { postJournalList, setMessageObject } from '../redux/actions/postJournalList';
 import { getJournalList } from '../redux/actions/getJournalList';
 import { getUserId } from '../utility';
@@ -67,7 +67,7 @@ class JournalListContainer extends Component {
         <ul>
           <li><Link to="/private">See all journal entries</Link></li>
           <li><Link to="/private/journal-entry/create">Create new journal entry</Link></li>
-          <li><Link to="/private/settings">Settings</Link></li>
+          <li><Link to="/private/user-settings">Settings</Link></li>
         </ul>
         <SaveJournalListButton
           handleJournalListPost={(e) => component.handleJournalListPost(e)}
@@ -85,8 +85,8 @@ class JournalListContainer extends Component {
             editJournalEntry = {component.editJournal}
             getJournalEntry = {component.getJournal} />
         )} />
-        <Route path ="/private/settings" render={() => (
-          <SettingsContainer />
+        <Route path ="/private/user-settings" render={() => (
+          <UserSettingsContainer />
         )} />
       </div>
     );
