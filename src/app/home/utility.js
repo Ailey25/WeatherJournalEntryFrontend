@@ -119,3 +119,25 @@ export const formatJournalsForBackend = (journalList) => {
     CityId: journal.cityId,
   }));
 };
+
+export const formattedSettingsForFrontend = (settings) => ({
+  tempUnit: settings.TempUnit
+});
+
+export const formattedSettingsForBackend = (settings) => ({
+  UserId: getUserId(),
+  TempUnit: settings.tempUnit
+});
+
+export const formattedUserForBackend = (user) => ({
+  Username: user.username || '',
+  FirstName: user.firstname || '',
+  LastName: user.lastname || '',
+  Password: user.password || ''
+});
+
+export const formattedUserForFrontend = (user) => ({
+  username: user.Username || '',
+  firstname: user.FirstName || '',
+  lastname: user.LastName || ''
+});

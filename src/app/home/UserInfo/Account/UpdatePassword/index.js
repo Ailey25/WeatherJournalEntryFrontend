@@ -12,7 +12,7 @@ const UpdatePassword = (props) => (
 				</dt>
 				<dd>
 					<input id={OLD_PASSWORD}
-						value={props.oldPassword}
+						type="password" value={props.oldPassword}
 						onChange={(e) => props.handlePasswordChange(e)}>
 					</input>
 				</dd>
@@ -23,7 +23,7 @@ const UpdatePassword = (props) => (
 				</dt>
 				<dd>
 					<input id={NEW_PASSWORD}
-						value={props.newPassword}
+						type="password" value={props.newPassword}
 						onChange={(e) => props.handlePasswordChange(e)}>
 					</input>
 				</dd>
@@ -34,7 +34,7 @@ const UpdatePassword = (props) => (
 				</dt>
 				<dd>
 					<input id={CONFIRM_PASSWORD}
-						value={props.confirmPassword}
+						type="password" value={props.confirmPassword}
 						onChange={(e) => props.handlePasswordChange(e)}>
 					</input>
 				</dd>

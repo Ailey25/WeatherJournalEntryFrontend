@@ -8,7 +8,6 @@ import {
   fetchWeatherStampInfo,
   weatherStampError
 } from  '../redux/actions/getWeatherAPI';
-import { logout } from '../redux/actions/userService';
 import {
   EDIT,
   CELCIUS,
@@ -45,7 +44,7 @@ class WeatherStampContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  tempUnit: state.settingsReducer.tempUnit,
+  tempUnit: state.userSettingsReducer.tempUnit,
   weatherObject: {
     cityName: state.weatherStampReducer.weatherObject.cityName,
     cityId: state.weatherStampReducer.weatherObject.cityId,

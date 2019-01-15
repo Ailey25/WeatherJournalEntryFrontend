@@ -3,32 +3,29 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 
 import Settings from './Settings/index';
+import {
+  getSettings,
+  postSettings,
+  setMessage
+} from '../../redux/actions/userSettings';
 import { toggleTempUnit } from '../../redux/actions/actions';
 import { getUserId } from '../../utility';
 import { CELCIUS, FAHRENHEIT } from '../../constants';
 
-class SettingsContainer extends Component {
-
-  componentDidMount() {
-    // if (this.props.tempUnit === undefined) {
-    //   this.props.toggleTempUnit(this.props.tempUnit)
-    // }
+class UserInfoContainer extends Component {
+  async componentDidMount() {
+    await this.props.getSettings();
   }
 
   handleTempUnitToggle = (e) => {
-    //this.props.toggleTempUnit(this.props.tempUnit);
+    this.props.toggleTempUnit(this.props.tempUnit);
   }
 
   handleSettingsPost = async (e) => {
     if (getUserId()) {
-      let settings = {
-        UserId: getUserId(),
-        TempUnit: 'F' //this.props.settings.tempUnit
-      }
-      console.log('settings post: ' + settings.UserId + ' ' + settings.TempUnit);
-      //await postSettings();
+      await this.props.postSettings({ tempUnit: this.props.tempUnit });
     } else {
-      console.log('Settings: user not recognized');
+      //logout
     }
   }
 
@@ -37,7 +34,7 @@ class SettingsContainer extends Component {
     return(
       <div>
         <Settings
-          tempUnit={'C'}//component.props.settings.tempUnit}
+          tempUnit={component.props.tempUnit}
           handleTempUnitToggle={(e) => component.handleTempUnitToggle(e)}
           handleSettingsPost={(e) => component.handleSettingsPost(e)}
         />
@@ -47,14 +44,20 @@ class SettingsContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  settings: state.settingsReducer.settings,
+  tempUnit: state.userSettingsReducer.tempUnit,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getSettings: () =>
+    dispatch(getSettings()),
+  postSettings: (settings) =>
+    dispatch(postSettings(settings)),
   toggleTempUnit: (currentTempUnit) =>
     dispatch(toggleTempUnit(currentTempUnit)),
+  resetMessage: () =>
+    dispatch(setMessage()),
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(SettingsContainer)
+  connect(mapStateToProps, mapDispatchToProps)(UserInfoContainer)
 );

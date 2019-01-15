@@ -15,7 +15,7 @@ import {
   login,
   register,
   setMessageObject
-} from '../redux/actions/userService';
+} from '../redux/actions/userState';
 
 class UserStateFormContainer extends Component {
   constructor(props) {
@@ -143,9 +143,9 @@ class UserStateFormContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isAuthenticating: state.userInfoReducer.isAuthenticating,
-  ok: state.userInfoReducer.ok,
-  message: state.userInfoReducer.message,
+  isAuthenticating: state.userStateReducer.isAuthenticating,
+  ok: state.userStateReducer.ok,
+  message: state.userStateReducer.message,
 });
 
 const mapDispatchToProps = (dispatch) => ({

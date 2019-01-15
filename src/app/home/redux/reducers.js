@@ -2,19 +2,18 @@ import * as types from './types';
 import { CELCIUS } from '../constants';
 
 // Initial States
-const userInfoInitialState = {
+const userStateInitialState = {
   isAuthenticating: false,
-  username: '',
-  firstname: '',
-  lastname: '',
   ok: false,
   message: '',
 };
 
-const settingsInitialState = {
-  tempUnit: CELCIUS,
+const userSettingsInitialState = {
   isPosting: false,
   isLoading: false,
+  tempUnit: CELCIUS,
+  firstname: '',
+  lastname: '',
   ok: false,
   message: '',
 };
@@ -41,19 +40,12 @@ const journalInitialState = {
   message: '',
 }
 
-export const userInfoReducer = (state = userInfoInitialState, action) => {
+export const userStateReducer = (state = userStateInitialState, action) => {
   switch(action.type) {
     case types.USER_IS_AUTHENTICATING:
       return {
          ...state,
          isAuthenticating: action.isAuthenticating,
-      };
-    case types.USER_GET_SUCCESS:
-      return {
-        ...state,
-        username: action.username,
-        firstname: action.username,
-        lastname: action.lastname,
       };
     case types.USER_STATUS:
       return {
@@ -64,32 +56,45 @@ export const userInfoReducer = (state = userInfoInitialState, action) => {
     default:
       return state;
    }
-};
+}
 
-export const settingsReducer = (state = settingsInitialState, action) => {
+export const userSettingsReducer = (state = userSettingsInitialState, action) => {
   switch(action.type) {
+    case types.USER_SETTINGS_IS_POSTING:
+      return {
+        ...state,
+        isPosting: action.isPosting,
+      };
+    case types.USER_SETTINGS_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
+    case types.USER_SETTINGS_OK:
+      return {
+        ...state,
+        ok: action.ok,
+      };
+    case types.USER_SETTINGS_MESSAGE:
+      return {
+        ...state,
+        message: action.message,
+      };
     case types.TOGGLE_TEMP_UNIT:
       return {
         ...state,
         tempUnit: action.tempUnit,
       };
-    case types.SETTINGS_IS_POSTING:
-      return {
-
-      };
-    case types.SETTINGS_IS_LOADING:
-      return {
-
-      };
     case types.SETTINGS_GET_SUCCESS:
       return {
-        
+        ...state,
+        tempUnit: action.tempUnit,
       };
-    case types.SETTINGS_STATUS:
+    case types.PROFILE_GET_SUCCESS:
       return {
         ...state,
-        ok: action.ok,
-        message: action.message,
+        firstname: action.firstname,
+        lastname: action.lastname,
       };
     default:
       return state;

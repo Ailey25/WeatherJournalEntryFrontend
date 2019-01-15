@@ -6,7 +6,7 @@ import JournalListContainer from '../../JournalList/index';
 import { isUserLoggedIn } from '../../utility';
 
 const PrivateRoute = ({component: Component, ...rest}) => {
-  const { isLoggedIn } = store.getState().userInfoReducer;
+  const { isLoggedIn } = store.getState().userStateReducer;
   return (
     <Route {...rest} render={(props) => (
       isUserLoggedIn()

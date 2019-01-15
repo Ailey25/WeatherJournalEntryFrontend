@@ -3,6 +3,11 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 
 import UpdateProfile from './UpdateProfile/index';
+import {
+  getProfile,
+  postProfile,
+  setMessage
+} from '../../redux/actions/userSettings';
 import { getUserId } from '../../utility';
 import { FIRSTNAME, LASTNAME } from '../../constants';
 
@@ -14,6 +19,15 @@ class ProfileContainer extends Component {
       lastname: '',
     }
   }
+
+  async componentDidMount() {
+    await this.props.getProfile();
+    this.setState({
+      firstname: this.props.firstname,
+      lastname: this.props.lastname,
+    })
+  }
+
   handleProfileChange = (e) => {
     switch(e.currentTarget.id) {
       case FIRSTNAME:
@@ -32,7 +46,11 @@ class ProfileContainer extends Component {
   handleProfilePost = async (e) => {
     e.preventDefault();
 
-    // updateProfile(this.state.firstname, this.state.lastname);
+    const user = {
+      firstname: this.state.firstname,
+      lastname: this.state.lastname
+    };
+    await this.props.postProfile(user);
   }
 
   render() {
@@ -51,13 +69,19 @@ class ProfileContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
+  firstname: state.userSettingsReducer.firstname,
+  lastname: state.userSettingsReducer.lastname,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
+  getProfile: () =>
+    dispatch(getProfile()),
+  postProfile: (user) =>
+    dispatch(postProfile(user)),
+  resetMessage: () =>
+    dispatch(setMessage()),
 });
 
 export default withRouter(
-  connect(null, null)(ProfileContainer)
+  connect(mapStateToProps, mapDispatchToProps)(ProfileContainer)
 );

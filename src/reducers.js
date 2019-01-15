@@ -1,15 +1,15 @@
 import { combineReducers } from 'redux';
 import {
-  userInfoReducer,
-  settingsReducer,
+  userStateReducer,
+  userSettingsReducer,
   journalListReducer,
   weatherStampReducer,
   journalReducer,
 } from './app/home/redux/reducers';
 
 const rootReducer = combineReducers({
-  userInfoReducer,
-  settingsReducer,
+  userStateReducer,
+  userSettingsReducer,
   journalListReducer,
   weatherStampReducer,
   journalReducer,

@@ -6,11 +6,7 @@ import SettingsContainer from './Settings/index';
 import ProfileContainer from './Profile/index';
 import AccountContainer from './Account/index';
 
-class UserSettingsContainer extends Component {
-  componentDidMount() {
-    //this.props.resetMessage();
-  }
-
+class UserInfoContainer extends Component {
   handleClick = (e) => {
     switch(e.currentTarget.id) {
       case 'settings':
@@ -29,13 +25,12 @@ class UserSettingsContainer extends Component {
   }
 
   displayMessage = () => {
-    return null; //remove this
-    if (this.props.ok === undefined) {
-      return null;
-    } else if (this.props.ok === true) {
-      return <label>Success: {this.props.message}</label>
-    } else if (this.props.ok === false) {
-      return <label>Failed: {this.props.message}</label>
+    if (this.props.message !== '') {
+      if (this.props.ok === true) {
+        return <label>Success: {this.props.message}</label>
+      } else if (this.props.ok === false) {
+        return <label>Failed: {this.props.message}</label>
+      }
     }
   }
 
@@ -68,14 +63,10 @@ class UserSettingsContainer extends Component {
     );
   }
 }
-/*    <Route path ="/private/profile" render={() => (
-      <Profile />
-    )} />*/
 
 const mapStateToProps = (state) => ({
-  settings: state.settingsReducer.settings,
-  ok: state.settingsReducer.ok,
-  message: state.settingsReducer.message,
+  ok: state.userSettingsReducer.ok,
+  message: state.userSettingsReducer.message,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -83,5 +74,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(UserSettingsContainer)
+  connect(mapStateToProps, null)(UserInfoContainer)
 );

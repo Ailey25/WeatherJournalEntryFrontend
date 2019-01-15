@@ -5,6 +5,12 @@ import { withRouter } from 'react-router-dom';
 import UpdatePassword from './UpdatePassword/index';
 import UpdateUsername from './UpdateUsername/index';
 import DeleteAccount from './DeleteAccount/index';
+import {
+  postPassword,
+  postUsername,
+  deleteAccount,
+  setMessage
+} from '../../redux/actions/userSettings';
 import { getUserId } from '../../utility';
 import { OLD_PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD } from '../../constants';
 
@@ -45,19 +51,26 @@ class AccountContainer extends Component {
     e.preventDefault();
 
     if (this.state.newPassword === this.state.confirmPassword) {
-      // updatePassword(oldPassword, newPassword)
+      await this.props.updatePassword({ password: this.state.newPassword }, this.state.oldPassword)
     } else {
-      // set message object to be password doesn't match
+      this.props.setMessage(false, 'New passwords don\'t match');
     }
   }
 
   handleUsernamePost = async (e) => {
     e.preventDefault();
-    // updateUsername(oldUsername, this.state.newUsername)
+
+    await this.props.updateUsername({ username: this.state.username });
+    this.setState({ username: '' });
   }
 
   handleDeleteAccountPost= async (e) => {
-    //tell backend to delete account
+    await this.props.deleteAccount();
+
+    if (this.props.ok) {
+      // clear localStorage
+      //this.history.push('/');
+    }
   }
 
   render() {
@@ -85,13 +98,20 @@ class AccountContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
+  ok: state.userSettingsReducer.ok,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
+  updatePassword: (user, oldPassword) =>
+    dispatch(postPassword(user, oldPassword)),
+  updateUsername: (user) =>
+    dispatch(postUsername(user)),
+  deleteAccount: () =>
+    dispatch(deleteAccount()),
+  resetMessage: () =>
+    dispatch(setMessage()),
 });
 
 export default withRouter(
-  connect(null, null)(AccountContainer)
+  connect(mapStateToProps, mapDispatchToProps)(AccountContainer)
 );

@@ -18,7 +18,6 @@ import {
 } from '../constants'
 import { setJournalMode } from '../redux/actions/actions';
 import { postWeatherData, setErrorObject } from '../redux/actions/postWeatherAPI';
-import { logout } from '../redux/actions/userService';
 import {
   validateCityName,
   validateCityId,
