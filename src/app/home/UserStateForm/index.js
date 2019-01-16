@@ -14,7 +14,7 @@ import {
 import {
   login,
   register,
-  setMessageObject
+  setMessage,
 } from '../redux/actions/userState';
 
 class UserStateFormContainer extends Component {
@@ -123,12 +123,12 @@ class UserStateFormContainer extends Component {
     if (this.props.isAuthenticating) {
       return <label>Validating information...</label>
     }
-    if (this.props.ok === undefined) {
-      return null
-    } else if (this.props.ok === true) {
-      return <label>Success: {this.props.message}</label>
-    } else if (this.props.ok === false){
-      return <label>Failed: {this.props.message}</label>
+    if (this.props.message !== '') {
+      if (this.props.ok === true) {
+        return <label>Success: {this.props.message}</label>
+      } else if (this.props.ok === false) {
+        return <label>Failed: {this.props.message}</label>
+      }
     }
   }
 
@@ -154,7 +154,7 @@ const mapDispatchToProps = (dispatch) => ({
   register: (user) =>
     dispatch(register(user)),
   resetMessage: () =>
-    dispatch(setMessageObject({ message: '' })),
+    dispatch(setMessage()),
 });
 
 export default withRouter(

@@ -1,7 +1,8 @@
 // user info
 export const USER_IS_AUTHENTICATING = 'USER_IS_AUTHENTICATING';
-export const USER_STATUS = 'USER_STATUS';
 export const USER_GET_SUCCESS = 'USER_GET_SUCCESS';
+export const USER_STATE_OK = 'USER_STATE_OK';
+export const USER_STATE_MESSAGE = 'USER_STATE_MESSAGE';
 
 // journal list
 export const JOURNAL_LIST_IS_POSTING = 'JOURNAL_LIST_IS_POSTING';

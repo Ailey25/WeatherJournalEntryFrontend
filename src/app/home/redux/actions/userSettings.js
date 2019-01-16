@@ -229,12 +229,12 @@ const setIsLoading = (bool) => ({
 export const setOk = (ok) => ({
   type: types.USER_SETTINGS_OK,
   ok
-})
+});
 
 export const setMessage = (message = '') => ({
   type: types.USER_SETTINGS_MESSAGE,
   message,
-})
+});
 
 const setSettings= (settings) => ({
   type: types.SETTINGS_GET_SUCCESS,

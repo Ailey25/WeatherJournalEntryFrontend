@@ -47,10 +47,14 @@ export const userStateReducer = (state = userStateInitialState, action) => {
          ...state,
          isAuthenticating: action.isAuthenticating,
       };
-    case types.USER_STATUS:
+    case types.USER_STATE_OK:
       return {
         ...state,
         ok: action.ok,
+      };
+    case types.USER_STATE_MESSAGE:
+      return {
+        ...state,
         message: action.message,
       };
     default:
