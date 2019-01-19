@@ -5,11 +5,14 @@ import { connect } from 'react-redux'
 
 import JournalList from './JournalList/index';
 import SaveJournalListButton from './SaveJournalListButton/index';
-import { addToJournalList, editJournalList } from '../redux/actions/actions';
 import JournalContainer from '../Journal/index';
 import UserInfoContainer from '../UserInfo/index';
-import { postJournalList, setMessageObject } from '../redux/actions/postJournalList';
-import { getJournalList } from '../redux/actions/getJournalList';
+import {
+  getJournalList,
+  postJournalList,
+  setMessage,
+} from '../redux/actions/journalList';
+import { deleteJournal } from '../redux/actions/synchronous';
 import { getUserId } from '../utility';
 
 class JournalListContainer extends Component {
@@ -27,25 +30,8 @@ class JournalListContainer extends Component {
     }
   }
 
-  addJournal = (journalObject) => {
-    this.props.onAddToJournalList(journalObject);
-  }
-
-  editJournal = (journalObject) => {
-    let index = this.props.journalList.findIndex(j => j.id === journalObject.id);
-    if (index !== -1) {
-      this.props.onEditJournalList(journalObject, index);
-    } // object's id doesn't exist in journalList
-  }
-
-  getJournal = (journalId) => {
-    let object;
-    this.props.journalList.forEach((elem) => {
-      if (elem.id === journalId) {
-        object = elem;
-      }
-    });
-    return object;
+  handleJournalDelete = (e, journalId) => {
+    //this.props.deleteJournal(this.props.journalList, journalId);
   }
 
   displayMessage = () => {
@@ -77,13 +63,11 @@ class JournalListContainer extends Component {
           <JournalList
             isLoading={component.props.isLoading}
             journalList={component.props.journalList}
+            handleJournalDelete={component.props.handleJournalDelete}
           />
         )} />
         <Route path="/private/journal-entry/:mode/:id?" render={(props) => (
-          <JournalContainer key={props.match.params.mode} {...props}
-            addJournalEntry = {component.addJournal}
-            editJournalEntry = {component.editJournal}
-            getJournalEntry = {component.getJournal} />
+          <JournalContainer key={props.match.params.mode} {...props} />
         )} />
         <Route path ="/private/user-settings" render={() => (
           <UserInfoContainer />
@@ -107,11 +91,9 @@ const mapDispatchToProps = (dispatch) => ({
   postJournalList: (id, journalList) =>
     dispatch(postJournalList(id, journalList)),
   resetMessage: () =>
-    dispatch(setMessageObject({ message: '' })),
-  onAddToJournalList: (journalObject) =>
-    dispatch(addToJournalList(journalObject)),
-  onEditJournalList: (journalObject, index) =>
-    dispatch(editJournalList(journalObject, index)),
+    dispatch(setMessage()),
+  deleteJournal: (journalList) =>
+    dispatch(deleteJournal(journalList, id)),
 });
 
 export default withRouter(

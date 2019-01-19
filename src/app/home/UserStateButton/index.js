@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import { isUserLoggedIn, logout } from '../utility';
+import { isUserLoggedIn, clearLocalStorage } from '../utility';
 import LogoutButton from './LogoutButton/index';
 import RegisterButton from './RegisterButton/index';
 
@@ -9,7 +9,7 @@ class UserStateButtonContainer extends Component {
   handleClick = (e) => {
     switch(e.currentTarget.id) {
       case 'logout':
-        logout();
+        clearLocalStorage();
         this.props.history.push("/");
         return;
       case 'register':

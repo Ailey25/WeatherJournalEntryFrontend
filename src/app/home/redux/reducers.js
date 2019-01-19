@@ -107,39 +107,29 @@ export const userSettingsReducer = (state = userSettingsInitialState, action) =>
 
 export const journalListReducer = (state = journalListInitialState, action) => {
   switch(action.type) {
-    case types.JOURNAL_LIST_GET_SUCCESS:
-      return {
-        ...state,
-        journalList: action.journalList,
-      };
-    case types.JOURNAL_LIST_IS_POSTING:
+    case types.SET_JOURNAL_LIST_IS_POSTING:
       return {
         ...state,
         isPosting: action.isPosting,
       }
-    case types.JOURNAL_LIST_IS_LOADING:
+    case types.SET_JOURNAL_LIST_IS_LOADING:
       return {
         ...state,
         isLoading: action.isLoading,
       };
-    case types.ADD_TO_JOURNAL_LIST:
+    case types.SET_JOURNAL_LIST:
       return {
         ...state,
-        journalList: [...state.journalList, action.journalEntry]
+        journalList: action.journalList,
       };
-    case types.EDIT_JOURNAL_LIST:
-      return {
-        ...state,
-        journalList: [
-          ...state.journalList.slice(0, action.index),
-          action.journalEntry,
-          ...state.journalList.slice(action.index+1)
-        ]
-      };
-    case types.JOURNAL_LIST_STATUS:
+    case types.SET_JOURNAL_LIST_OK:
       return {
         ...state,
         ok: action.status,
+      };
+    case types.SET_JOURNAL_LIST_MESSAGE:
+      return {
+        ...state,
         message: action.message,
       };
     default:

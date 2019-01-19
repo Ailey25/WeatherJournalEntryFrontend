@@ -8,7 +8,7 @@ import {
   postSettings,
   setMessage
 } from '../../redux/actions/userSettings';
-import { toggleTempUnit } from '../../redux/actions/actions';
+import { toggleTempUnit } from '../../redux/actions/synchronous';
 import { getUserId } from '../../utility';
 import { CELCIUS, FAHRENHEIT } from '../../constants';
 

@@ -1,6 +1,6 @@
 import * as types from '../types';
 import { BASE_URL } from '../../constants';
-import { authenticationHeader/*, logout*/ } from '../../utility';
+import { authenticationHeader } from '../../utility';
 
 export const postWeatherData = (fetchUrl) => (
   async dispatch => {
@@ -18,9 +18,7 @@ const fetchWeatherDataPost = (fetchUrl) => {
     dispatch(weatherDataIsPosting(true));
     await fetch(fetchUrl, requestOptions)
       .then(response => {
-        if (response.status === 401) {
-          logout();
-        }
+        //f (response.status === 401) 
         return response.json()
       })
       .then(data => {

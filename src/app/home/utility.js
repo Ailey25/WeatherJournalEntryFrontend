@@ -79,14 +79,19 @@ export const calcTemp = (tempInKelvin, toUnit) => {
 };
 
 export const authenticationHeader = () => {
-  let token = JSON.parse(localStorage.getItem('token'));
+  let token = localStorage.getItem('token');
 
   if (token) {
-      return { 'Authorization': 'Bearer ' + token };
+      return { 'Authorization': 'Bearer ' + JSON.parse(token) };
   } else {
       return {};
   }
 };
+
+export const getRequestOptions = () => ({
+  method: 'GET',
+  headers: { ...authenticationHeader(), 'Content-Type': 'application/json' }
+});
 
 export const isUserLoggedIn = () => {
   if (localStorage.getItem('token')) return true;
@@ -97,12 +102,12 @@ export const getUserId = () => {
   return JSON.parse(localStorage.getItem('userId'));
 };
 
-export const logout = () => {
+export const clearLocalStorage = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('userId');
 };
 
-export const formatJournalsForFrontend = (journals) => {
+export const formattedJournalsForFrontend = (journals) => {
   return journals.map(journal => ({
     id: journal.JournalId,
     title: journal.Title,
@@ -111,7 +116,7 @@ export const formatJournalsForFrontend = (journals) => {
   }));
 };
 
-export const formatJournalsForBackend = (journalList) => {
+export const formattedJournalsForBackend = (journalList) => {
   return journalList.map(journal => ({
     JournalId: journal.id,
     Title: journal.title,

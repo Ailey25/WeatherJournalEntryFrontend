@@ -9,6 +9,8 @@ import JournalHeader from './JournalHeader/index';
 import JournalBody from './JournalBody/index';
 import JournalPostWeatherDataInputs from './JournalPostWeatherDataInputs/index';
 import JournalPostWeatherDataResults from './JournalPostWeatherDataResults/index';
+import { setJournalMode, addJournal, editJournal } from '../redux/actions/synchronous';
+import { postWeatherData, setErrorObject } from '../redux/actions/postWeatherAPI';
 import {
   CREATE, EDIT,
   CITY_ID, CITY_NAME,
@@ -16,8 +18,6 @@ import {
   CITY_NAME_VALIDATION_STATUS, CITY_NAME_VALIDATION_MESSAGE,
   CITY_ID_VALIDATION_STATUS, CITY_ID_VALIDATION_MESSAGE,
 } from '../constants'
-import { setJournalMode } from '../redux/actions/actions';
-import { postWeatherData, setErrorObject } from '../redux/actions/postWeatherAPI';
 import {
   validateCityName,
   validateCityId,
@@ -44,7 +44,8 @@ class JournalContainer extends Component {
         id: uuidv4()
       });
     } else if (this.props.match.params.mode === EDIT) {
-      let journal = this.props.getJournalEntry(this.props.match.params.id);
+
+      let journal = this.getJournal(this.props.match.params.id);
       this.setState({
         id: this.props.match.params.id,
         title: journal.title,
@@ -60,6 +61,16 @@ class JournalContainer extends Component {
     if (!(getUserId())) {
        this.props.history.push("/");
     }
+  }
+
+  getJournal = (journalId) => {
+    let object;
+    this.props.journalList.forEach((elem) => {
+      if (elem.id === journalId) {
+        object = elem;
+      }
+    });
+    return object;
   }
 
   handleChange = (e) => {
@@ -130,7 +141,7 @@ class JournalContainer extends Component {
   }
 
   updateJournalEntryList = () => {
-    let journalObject = {
+    let journal = {
       id: this.state.id,
       title: this.state.title,
       entry: this.state.entry,
@@ -139,10 +150,10 @@ class JournalContainer extends Component {
 
     switch(this.props.match.params.mode) {
       case CREATE:
-        this.props.addJournalEntry(journalObject);
+        this.props.addJournal(this.props.journalList, journal);
         return true;
       case EDIT:
-        this.props.editJournalEntry(journalObject);
+        this.props.editJournal(this.props.journalList, journal);
         return true;
       default:
         this.props.setErrorMessage('Journal entry mode not recognized');
@@ -213,6 +224,7 @@ class JournalContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  journalList: state.journalListReducer.journalList,
   weatherObject: state.weatherStampReducer.weatherObject,
   cityId: state.journalReducer.cityId,
   isPosting: state.journalReducer.isPosting,
@@ -221,6 +233,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  addJournal: (journalList, journal) =>
+    dispatch(addJournal(journalList, journal)),
+  editJournal: (journalList, journal) =>
+    dispatch(editJournal(journalList, journal)),
   postWeatherData: (fetchUrl) =>
     dispatch(postWeatherData(fetchUrl)),
   setErrorMessage: (errorMessage) =>

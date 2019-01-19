@@ -1,5 +1,8 @@
 export const BASE_URL = '/api/values';
-export const STATUS_CODE_UNAUTHORIZED = '401';
+
+// weather stamp
+export const CELCIUS = 'C';
+export const FAHRENHEIT = 'F';
 
 // Login and register and settings
 // also used as input ids for login/register so " " instead of ' '
@@ -13,14 +16,21 @@ export const OLD_PASSWORD = 'old-password';
 export const NEW_USERNAME = "new-username";
 export const DELETE_ACCOUNT = "delete-account";
 
-export const TOGGLE_TEMP_UNIT = 'TOGGLE_TEMP_UNIT';
-
 // journal
 // also used as input ids for journal so " " instead of ' '
 export const CREATE = "create";
 export const EDIT = "edit";
 export const CITY_ID = 'CITY_ID';
 export const CITY_NAME = 'CITY_NAME';
+
+// status code for backend responses
+const UNAUTHORIZED = 'UNAUTHORIZED';
+const GATEWAY_TIMEOUT = 'GATEWAY_TIMEOUT';
+
+export const STATUS_CODE = {
+  [UNAUTHORIZED]: 401,
+  [GATEWAY_TIMEOUT]: 501,
+};
 
 // submission validation
 const SUCCESS = 'SUCCESS';
@@ -52,7 +62,3 @@ export const CITY_ID_VALIDATION_MESSAGE = {
   [CITY_ID_VALIDATION_STATUS.EMPTY]: 'City id value cannot be empty',
   [CITY_ID_VALIDATION_STATUS.NON_NUMBER]: 'City ID must be numbers',
 };
-
-// weather stamp
-export const CELCIUS = 'C';
-export const FAHRENHEIT = 'F';
