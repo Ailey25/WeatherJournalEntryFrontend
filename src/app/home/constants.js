@@ -4,6 +4,11 @@ export const BASE_URL = '/api/values';
 export const CELCIUS = 'C';
 export const FAHRENHEIT = 'F';
 
+// weather
+export const WEATHER_OBJECT = 'WEATHER_OBJECT';
+export const MAIN = 'MAIN';
+export const WEATHER = 'WEATHER';
+
 // Login and register and settings
 // also used as input ids for login/register so " " instead of ' '
 export const USERNAME = "username";

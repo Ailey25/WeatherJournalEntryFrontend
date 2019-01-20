@@ -1,5 +1,5 @@
 import * as types from '../types';
-import { BASE_URL, STATUS_CODE, UNAUTHORIZED } from '../../constants';
+import { BASE_URL, STATUS_CODE } from '../../constants';
 import {
   authenticationHeader,
   getRequestOptions,
@@ -59,7 +59,7 @@ export const getJournalList = () => {
         return response.json();
       })
       .then(data => {
-        const formattedJournals = formatJournalsForFrontend(data);
+        const formattedJournals = formattedJournalsForFrontend(data);
         dispatch(setJournalList(formattedJournals));
         dispatch(setMessage(data.message));
         dispatch(setIsLoading(false));
@@ -92,7 +92,8 @@ export const setMessage = (message = '') => ({
   message,
 });
 
-const setJournalList = (journals) => ({
+const setJournalList = (journals) => {
+  return {
   type: types.SET_JOURNAL_LIST,
   journalList: journals,
-});
+}};

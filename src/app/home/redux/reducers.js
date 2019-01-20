@@ -25,20 +25,18 @@ const journalListInitialState = {
   ok: false,
   message: '',
 }
-const weatherStampInitialState = {
-  isLoading: false,
-  status: '',
-  message: '',
-  weatherObject: {},
-  main: {},
-  weather: [],
-}
-const journalInitialState = {
+const weatherInitialState = {
   isPosting: false,
-  cityId: '',
+  isLoading: false,
   ok: false,
   message: '',
-}
+  weatherObject: {
+    cityId: '',
+    cityName: ''
+  },
+  main: {},
+  weather: [],
+};
 
 export const userStateReducer = (state = userStateInitialState, action) => {
   switch(action.type) {
@@ -137,14 +135,19 @@ export const journalListReducer = (state = journalListInitialState, action) => {
   }
 };
 
-export const weatherStampReducer = (state = weatherStampInitialState, action) => {
+export const weatherReducer  = (state = weatherInitialState, action) => {
   switch(action.type) {
-    case types.WEATHER_STAMP_IS_LOADING:
+    case types.SET_WEATHER_OBJECT_IS_POSTING:
+      return {
+        ...state,
+        isPosting: action.isPosting,
+      }
+    case types.SET_WEATHER_OBJECT_IS_LOADING:
       return {
         ...state,
         isLoading: action.isLoading,
       };
-    case types.WEATHER_OBJECT_GET_SUCCESS:
+    case types.SET_WEATHER_OBJECT:
       return {
         ...state,
         weatherObject: {
@@ -152,48 +155,28 @@ export const weatherStampReducer = (state = weatherStampInitialState, action) =>
           cityName: action.weatherObject.cityName,
         },
       };
-    case types.MAIN_GET_SUCCESS:
+    case types.SET_MAIN:
       return {
         ...state,
         main: {
           temp: action.main.temp,
         },
       };
-    case types.WEATHER_GET_SUCCESS:
+    case types.SET_WEATHER:
       return {
         ...state,
         weather: action.weather,
       };
-    case types.WEATHER_STAMP_ERROR:
-      return {
-        ...state,
-        status: action.status,
-        message: action.message,
-      };
-    default:
-      return state;
-  }
-};
-
-export const journalReducer = (state=journalInitialState, action) => {
-  switch(action.type) {
-    case types.WEATHER_DATA_IS_POSTING:
-      return {
-        ...state,
-        isPosting: action.isPosting,
-      };
-    case types.WEATHER_DATA_ERROR:
+    case types.SET_WEATHER_OBJECT_OK:
       return {
         ...state,
         ok: action.ok,
+      };
+    case types.SET_WEATHER_OBJECT_MESSAGE:
+      return {
+        ...state,
         message: action.message,
       };
-    case types.WEATHER_DATA_POST_SUCCESS:
-     return {
-       ...state,
-       cityId: action.cityId,
-       ok: true,
-     };
     default:
       return state;
   }

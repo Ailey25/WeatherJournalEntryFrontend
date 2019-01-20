@@ -30,7 +30,7 @@ const JournalList = (props) => {
                 <span>
                   <label>{journal.title} </label>
                   <Link to={'/private/journal-entry/edit/' + journal.id}>Edit</Link>
-                  <button onClick={(e) => props.handleJournalDelete(e, journal.id)}>
+                  <button id={journal.id} onClick={(e) => props.handleJournalDelete(e)}>
                     x
                   </button>
                 </span>

@@ -30,8 +30,8 @@ class JournalListContainer extends Component {
     }
   }
 
-  handleJournalDelete = (e, journalId) => {
-    //this.props.deleteJournal(this.props.journalList, journalId);
+  handleJournalDelete = (e) => {
+    this.props.deleteJournal(this.props.journalList, e.currentTarget.id);
   }
 
   displayMessage = () => {
@@ -63,7 +63,7 @@ class JournalListContainer extends Component {
           <JournalList
             isLoading={component.props.isLoading}
             journalList={component.props.journalList}
-            handleJournalDelete={component.props.handleJournalDelete}
+            handleJournalDelete={(e) => component.handleJournalDelete(e)}
           />
         )} />
         <Route path="/private/journal-entry/:mode/:id?" render={(props) => (
@@ -90,10 +90,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(getJournalList()),
   postJournalList: (id, journalList) =>
     dispatch(postJournalList(id, journalList)),
+  deleteJournal: (journalList, id) =>
+    dispatch(deleteJournal(journalList, id)),
   resetMessage: () =>
     dispatch(setMessage()),
-  deleteJournal: (journalList) =>
-    dispatch(deleteJournal(journalList, id)),
 });
 
 export default withRouter(

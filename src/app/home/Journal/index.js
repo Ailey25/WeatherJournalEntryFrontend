@@ -10,7 +10,7 @@ import JournalBody from './JournalBody/index';
 import JournalPostWeatherDataInputs from './JournalPostWeatherDataInputs/index';
 import JournalPostWeatherDataResults from './JournalPostWeatherDataResults/index';
 import { setJournalMode, addJournal, editJournal } from '../redux/actions/synchronous';
-import { postWeatherData, setErrorObject } from '../redux/actions/postWeatherAPI';
+import { postWeatherData, setMessage } from '../redux/actions/weatherData';
 import {
   CREATE, EDIT,
   CITY_ID, CITY_NAME,
@@ -38,7 +38,7 @@ class JournalContainer extends Component {
   }
 
   componentDidMount() {
-    this.props.setErrorMessage('');
+    this.props.setMessage('');
     if (this.props.match.params.mode === CREATE) {
       this.setState({
         id: uuidv4()
@@ -53,7 +53,7 @@ class JournalContainer extends Component {
         callType: CITY_ID,
       });
     } else {
-      this.props.setErrorMessage('Journal mode not recognized');
+      this.props.setMessage('Journal mode not recognized');
     }
   }
 
@@ -101,7 +101,7 @@ class JournalContainer extends Component {
         });
         break;
       default:
-        this.props.setErrorMessage(
+        this.props.setMessage(
           'handleChange: current target id ' + e.currentTarget.id + ' not handled'
         );
         break;
@@ -130,13 +130,13 @@ class JournalContainer extends Component {
       if (this.updateJournalEntryList()) {
         this.resetState();
       }
-      this.props.setErrorMessage(
+      this.props.setMessage(
         'Journal entry edited/added!\
         Re-enter to see updated weather info\
         [Might add another page to redirect to later]'
       );
     } else {
-      this.props.setErrorMessage('Journal entry could not be added - Invalid location');
+      this.props.setMessage('Journal entry could not be added - Invalid location');
     }
   }
 
@@ -145,7 +145,7 @@ class JournalContainer extends Component {
       id: this.state.id,
       title: this.state.title,
       entry: this.state.entry,
-      cityId: this.props.cityId,
+      cityId: this.props.weatherObject.cityId,
     };
 
     switch(this.props.match.params.mode) {
@@ -156,7 +156,7 @@ class JournalContainer extends Component {
         this.props.editJournal(this.props.journalList, journal);
         return true;
       default:
-        this.props.setErrorMessage('Journal entry mode not recognized');
+        this.props.setMessage('Journal entry mode not recognized');
         return false;
     }
   }
@@ -166,12 +166,12 @@ class JournalContainer extends Component {
       case CITY_NAME:
         const cityNameValidationStatus = validateCityName(this.state.callParamsString);
         if (cityNameValidationStatus === CITY_NAME_VALIDATION_STATUS.SUCCESS) return true;
-        this.props.setErrorMessage(CITY_NAME_VALIDATION_MESSAGE[cityNameValidationStatus]);
+        this.props.setMessage(CITY_NAME_VALIDATION_MESSAGE[cityNameValidationStatus]);
         return false;
       case CITY_ID:
         const cityIdValidationStatus = validateCityId(this.state.callParamsString);
         if (cityIdValidationStatus === CITY_ID_VALIDATION_STATUS.SUCCESS) return true;
-        this.props.setErrorMessage(CITY_ID_VALIDATION_MESSAGE[cityIdValidationStatus]);
+        this.props.setMessage(CITY_ID_VALIDATION_MESSAGE[cityIdValidationStatus]);
         return false;
       default:
         return false;
@@ -185,7 +185,7 @@ class JournalContainer extends Component {
       title: '',
       entry: '',
     });
-    this.props.setErrorMessage('');
+    this.props.setMessage('');
   }
 
   render() {
@@ -224,12 +224,11 @@ class JournalContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  isPosting: state.weatherReducer.isPosting,
   journalList: state.journalListReducer.journalList,
-  weatherObject: state.weatherStampReducer.weatherObject,
-  cityId: state.journalReducer.cityId,
-  isPosting: state.journalReducer.isPosting,
-  ok: state.journalReducer.ok,
-  message: state.journalReducer.message,
+  weatherObject: state.weatherReducer.weatherObject,
+  ok: state.weatherReducer.ok,
+  message: state.weatherReducer.message,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -239,8 +238,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(editJournal(journalList, journal)),
   postWeatherData: (fetchUrl) =>
     dispatch(postWeatherData(fetchUrl)),
-  setErrorMessage: (errorMessage) =>
-    dispatch(setErrorObject({ message: errorMessage })),
+  setMessage: (message) =>
+    dispatch(setMessage(message)),
 });
 
 export default withRouter(

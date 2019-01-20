@@ -107,12 +107,27 @@ export const clearLocalStorage = () => {
   localStorage.removeItem('userId');
 };
 
+export const formattedWeatherObjectForFrontend = (weatherObject) => ({
+  cityId: weatherObject.Id,
+  cityName: weatherObject.Name,
+});
+
+export const formattedMainForFrontend = (main) => ({
+  temp: main.Temp,
+});
+
+export const formattedWeathersForFrontend = (weathers) => {
+  return weathers.map(weather => ({
+    description: weather.Description
+  }));
+};
+
 export const formattedJournalsForFrontend = (journals) => {
   return journals.map(journal => ({
     id: journal.JournalId,
     title: journal.Title,
     entry: journal.Entry,
-    cityId: journal.CityId,
+    cityId: journal.CityId
   }));
 };
 
@@ -121,7 +136,7 @@ export const formattedJournalsForBackend = (journalList) => {
     JournalId: journal.id,
     Title: journal.title,
     Entry: journal.entry,
-    CityId: journal.cityId,
+    CityId: journal.cityId
   }));
 };
 

@@ -3,16 +3,14 @@ import {
   userStateReducer,
   userSettingsReducer,
   journalListReducer,
-  weatherStampReducer,
-  journalReducer,
+  weatherReducer,
 } from './app/home/redux/reducers';
 
 const rootReducer = combineReducers({
   userStateReducer,
   userSettingsReducer,
   journalListReducer,
-  weatherStampReducer,
-  journalReducer,
+  weatherReducer,
 });
 
 export default rootReducer;
