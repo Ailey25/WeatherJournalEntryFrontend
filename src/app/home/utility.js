@@ -5,6 +5,7 @@ import {
   CITY_NAME, CITY_ID,
   CELCIUS, FAHRENHEIT,
   CITY_NAME_VALIDATION_STATUS, CITY_ID_VALIDATION_STATUS,
+  STATUS_CODE,
 } from './constants'
 
 export const validateCityName = (cityName) => {
@@ -107,6 +108,16 @@ export const clearLocalStorage = () => {
   localStorage.removeItem('userId');
 };
 
+// clear local storage on certain status codes
+export const isClearLocalStorageOnStatusCode = (statusCode) => {
+  if (statusCode === STATUS_CODE.UNAUTHORIZED ||
+      statusCode === STATUS_CODE.GATEWAY_TIMEOUT) {
+        clearLocalStorage();
+        return true;
+  }
+  return false;
+}
+
 export const formattedWeatherObjectForFrontend = (weatherObject) => ({
   cityId: weatherObject.Id,
   cityName: weatherObject.Name,
@@ -118,6 +129,10 @@ export const formattedMainForFrontend = (main) => ({
 
 export const formattedWeathersForFrontend = (weathers) => {
   return weathers.map(weather => ({
+    id: weather.Id,
+    main: weather.Main,
+    icon: weather.Icon,
+    weatherId: weather.WeatherId,
     description: weather.Description
   }));
 };

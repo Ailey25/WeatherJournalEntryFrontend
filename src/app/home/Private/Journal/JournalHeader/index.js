@@ -1,5 +1,5 @@
 import React from 'react';
-import { CREATE, EDIT } from '../../constants'
+import { CREATE, EDIT } from '../../../constants'
 
 export const JournalHeader= (props) => {
   switch (props.mode) {

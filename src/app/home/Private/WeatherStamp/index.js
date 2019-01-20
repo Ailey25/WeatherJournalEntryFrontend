@@ -4,13 +4,13 @@ import { withRouter } from 'react-router-dom';
 import 'babel-polyfill';
 
 import { WeatherStamp } from './WeatherStamp/index';
-import { getWeatherData, setMessage } from  '../redux/actions/weatherData';
+import { getWeatherData, setMessage } from  '../../redux/actions/weatherData';
 import {
   EDIT,
   CELCIUS,
   BASE_URL
-} from '../constants'
-import { getUserId } from '../utility';
+} from '../../constants'
+import { getUserId } from '../../utility';
 
 class WeatherStampContainer extends Component {
   async componentDidMount() {

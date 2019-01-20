@@ -40,17 +40,17 @@ const weatherInitialState = {
 
 export const userStateReducer = (state = userStateInitialState, action) => {
   switch(action.type) {
-    case types.USER_IS_AUTHENTICATING:
+    case types.SET_USER_IS_AUTHENTICATING:
       return {
          ...state,
          isAuthenticating: action.isAuthenticating,
       };
-    case types.USER_STATE_OK:
+    case types.SET_USER_STATE_OK:
       return {
         ...state,
         ok: action.ok,
       };
-    case types.USER_STATE_MESSAGE:
+    case types.SET_USER_STATE_MESSAGE:
       return {
         ...state,
         message: action.message,
@@ -62,22 +62,22 @@ export const userStateReducer = (state = userStateInitialState, action) => {
 
 export const userSettingsReducer = (state = userSettingsInitialState, action) => {
   switch(action.type) {
-    case types.USER_SETTINGS_IS_POSTING:
+    case types.SET_USER_SETTINGS_IS_POSTING:
       return {
         ...state,
         isPosting: action.isPosting,
       };
-    case types.USER_SETTINGS_IS_LOADING:
+    case types.SET_USER_SETTINGS_IS_LOADING:
       return {
         ...state,
         isLoading: action.isLoading,
       };
-    case types.USER_SETTINGS_OK:
+    case types.SET_USER_SETTINGS_OK:
       return {
         ...state,
         ok: action.ok,
       };
-    case types.USER_SETTINGS_MESSAGE:
+    case types.SET_USER_SETTINGS_MESSAGE:
       return {
         ...state,
         message: action.message,
@@ -87,12 +87,12 @@ export const userSettingsReducer = (state = userSettingsInitialState, action) =>
         ...state,
         tempUnit: action.tempUnit,
       };
-    case types.SETTINGS_GET_SUCCESS:
+    case types.SET_SETTINGS:
       return {
         ...state,
         tempUnit: action.tempUnit,
       };
-    case types.PROFILE_GET_SUCCESS:
+    case types.SET_PROFILE:
       return {
         ...state,
         firstname: action.firstname,
@@ -123,7 +123,7 @@ export const journalListReducer = (state = journalListInitialState, action) => {
     case types.SET_JOURNAL_LIST_OK:
       return {
         ...state,
-        ok: action.status,
+        ok: action.ok,
       };
     case types.SET_JOURNAL_LIST_MESSAGE:
       return {

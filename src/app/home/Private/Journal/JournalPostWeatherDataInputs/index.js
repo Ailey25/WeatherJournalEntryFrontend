@@ -1,5 +1,5 @@
 import React from 'react';
-import { CREATE, EDIT, CITY_ID, CITY_NAME } from '../../constants'
+import { CREATE, EDIT, CITY_ID, CITY_NAME } from '../../../constants'
 
 export const JournalPostWeatherDataInputs = (props) => {
   if (props.mode === EDIT) return null;

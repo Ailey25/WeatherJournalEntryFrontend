@@ -1,5 +1,5 @@
 import React from 'react';
-import { NEW_USERNAME } from '../../../constants';
+import { NEW_USERNAME } from '../../../../constants';
 
 const UpdateUsername = (props) => (
 	<div>

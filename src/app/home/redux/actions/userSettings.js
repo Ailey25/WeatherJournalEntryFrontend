@@ -1,8 +1,10 @@
 import * as types from '../types';
-import { BASE_URL } from '../../constants';
+import { BASE_URL, STATUS_CODE } from '../../constants';
 import {
   authenticationHeader,
+  getRequestOptions,
   getUserId,
+  isClearLocalStorageOnStatusCode,
   formattedSettingsForFrontend,
   formattedSettingsForBackend,
   formattedUserForFrontend,
@@ -21,12 +23,15 @@ export const postSettings = (settings) => {
     dispatch(setIsPosting(true));
     await fetch(BASE_URL + '/user/settings/', requestOptions)
       .then(response => {
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
           dispatch(setOk(false));
         }
-        return response.json()
+        return response.json();
       })
       .then(data => {
         dispatch(setMessage(data.message));
@@ -52,12 +57,15 @@ export const postProfile = (user) => {
     dispatch(setIsPosting(true));
     await fetch(BASE_URL + '/user/profile/' + getUserId(), requestOptions)
       .then(response => {
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
           dispatch(setOk(false));
         }
-        return response.json()
+        return response.json();
       })
       .then(data => {
         dispatch(setMessage(data.message));
@@ -83,12 +91,15 @@ export const postPassword = (user, oldPassword) => {
     dispatch(setIsPosting(true));
     await fetch(BASE_URL + '/user/password/' + getUserId() + '/' + oldPassword, requestOptions)
       .then(response => {
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
           dispatch(setOk(false));
         }
-        return response.json()
+        return response.json();
       })
       .then(data => {
         dispatch(setMessage(data.message));
@@ -114,12 +125,15 @@ export const postUsername = (user) => {
     dispatch(setIsPosting(true));
     await fetch(BASE_URL + '/user/username/' + getUserId(), requestOptions)
       .then(response => {
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
           dispatch(setOk(false));
         }
-        return response.json()
+        return response.json();
       })
       .then(data => {
         dispatch(setMessage(data.message));
@@ -143,6 +157,9 @@ export const deleteAccount = () => {
     dispatch(setIsPosting(true));
     await fetch(BASE_URL + '/user/' + getUserId(), requestOptions)
       .then(response => {
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
           dispatch(setMessage('Account deleted'));
@@ -159,25 +176,23 @@ export const deleteAccount = () => {
   }
 };
 
-const getRequestOptions = {
-  method: 'GET',
-  headers: { ...authenticationHeader(), 'Content-Type': 'application/json' }
-};
-
 export const getSettings = () => {
   return async dispatch => {
     dispatch(setIsLoading(true));
-    await fetch(BASE_URL + '/user/settings/' + getUserId(), getRequestOptions)
+    await fetch(BASE_URL + '/user/settings/' + getUserId(), getRequestOptions())
       .then(response => {
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
           dispatch(setOk(false));
         }
-        return response.json()
+        return response.json();
       })
       .then(data => {
-        if (data == null) throw new Error('Setting can\'t be retrieved');
+        if (data === null) throw new Error('Setting can\'t be retrieved');
         const formattedSettings = formattedSettingsForFrontend(data);
         dispatch(setSettings(formattedSettings));
         dispatch(setIsLoading(false));
@@ -188,20 +203,23 @@ export const getSettings = () => {
         dispatch(setIsLoading(false));
       })
   }
-}
+};
 
 export const getProfile = () => {
   return async dispatch => {
     dispatch(setIsLoading(true));
-    await fetch(BASE_URL + '/user/' + getUserId(), getRequestOptions)
+    await fetch(BASE_URL + '/user/' + getUserId(), getRequestOptions())
       .then(response => {
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
           dispatch(setOk(false));
           throw new Error('User information can\'t be retrieved')
         }
-        return response.json()
+        return response.json();
       })
       .then(data => {
         const formattedUser = formattedUserForFrontend(data);
@@ -214,35 +232,35 @@ export const getProfile = () => {
         dispatch(setIsLoading(false));
       })
   }
-}
+};
 
 const setIsPosting = (bool) => ({
-  type: types.USER_SETTINGS_IS_POSTING,
+  type: types.SET_USER_SETTINGS_IS_POSTING,
   isPosting: bool
 });
 
 const setIsLoading = (bool) => ({
-  type: types.USER_SETTINGS_IS_LOADING ,
+  type: types.SET_USER_SETTINGS_IS_LOADING ,
   isLoading: bool
 });
 
 export const setOk = (ok) => ({
-  type: types.USER_SETTINGS_OK,
+  type: types.SET_USER_SETTINGS_OK,
   ok
 });
 
 export const setMessage = (message = '') => ({
-  type: types.USER_SETTINGS_MESSAGE,
+  type: types.SET_USER_SETTINGS_MESSAGE,
   message,
 });
 
 const setSettings= (settings) => ({
-  type: types.SETTINGS_GET_SUCCESS,
+  type: types.SET_SETTINGS,
   tempUnit: settings.tempUnit
 });
 
 const setProfile = (user) => ({
-  type: types.PROFILE_GET_SUCCESS,
+  type: types.SET_PROFILE,
   firstname: user.firstname,
   lastname: user.lastname,
 });

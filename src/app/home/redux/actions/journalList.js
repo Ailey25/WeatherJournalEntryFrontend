@@ -4,7 +4,7 @@ import {
   authenticationHeader,
   getRequestOptions,
   getUserId,
-  clearLocalStorage,
+  isClearLocalStorageOnStatusCode,
   formattedJournalsForFrontend,
   formattedJournalsForBackend
 } from '../../utility';
@@ -24,7 +24,9 @@ export const postJournalList = (id, journalList) => {
     dispatch(setIsPosting(true));
      await fetch(BASE_URL + '/user/journal-list', requestOptions)
       .then(response => {
-        //if (response.status === STATUS_CODE.UNAUTHORIZED) clearLocalStorage();
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
@@ -49,7 +51,9 @@ export const getJournalList = () => {
     dispatch(setIsLoading(true));
     await fetch(BASE_URL + '/user/journal-list/' + getUserId(), getRequestOptions())
       .then(response => {
-        //if (response.status === STATUS_CODE.UNAUTHORIZED) clearLocalStorage();
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {

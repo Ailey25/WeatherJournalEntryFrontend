@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { CREATE } from '../../constants';
-import { calcTemp } from '../../utility.js';
+import { CREATE } from '../../../constants';
+import { calcTemp } from '../../../utility.js';
 
 const WeatherStamp = (props) => {
   if (props.mode === CREATE) return null;
@@ -17,7 +17,7 @@ const WeatherStamp = (props) => {
       <br></br>
       { // weather descriptions
         props.weather.map((weather) => (
-          <label key={weather.id}>
+          <label key={weather.weatherId}>
             {weather.description}&nbsp;
           </label>
         ))

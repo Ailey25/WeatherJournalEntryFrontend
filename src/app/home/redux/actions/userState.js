@@ -1,6 +1,6 @@
 import React from 'react';
 import * as types from '../types';
-import { BASE_URL } from '../../constants';
+import { BASE_URL, STATUS_CODE } from '../../constants';
 import { authenticationHeader } from '../../utility';
 
 export const login = (username, password) => {
@@ -14,7 +14,9 @@ export const login = (username, password) => {
     dispatch(setIsAuthenticating(true));
     await fetch(BASE_URL + '/user/authenticate', requestOptions)
       .then(response => {
-        if (response.status === 504) throw new Error('Server is currently offline');
+        if (response.status === STATUS_CODE.GATEWAY_TIMEOUT) {
+          throw new Error('Server is currently offline');
+        }
         if (!(response.ok)) throw new Error('Username or password is incorrect');
         return response.json()
       })
@@ -44,6 +46,9 @@ export const register = (user) => {
     dispatch(setIsAuthenticating(true));
     await fetch(BASE_URL + '/user/register', requestOptions)
       .then(response => {
+        if (response.status === STATUS_CODE.GATEWAY_TIMEOUT) {
+          throw new Error('Server is currently offline');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
@@ -64,16 +69,16 @@ export const register = (user) => {
 };
 
 const setIsAuthenticating = (bool) => ({
-  type: types.USER_IS_AUTHENTICATING,
+  type: types.SET_USER_IS_AUTHENTICATING,
   isAuthenticating: bool,
 });
 
 const setOk = (ok) => ({
-  type: types.USER_STATE_OK,
+  type: types.SET_USER_STATE_OK,
   ok
 });
 
 export const setMessage = (message = '') => ({
-  type: types.USER_STATE_MESSAGE,
+  type: types.SET_USER_STATE_MESSAGE,
   message,
 });

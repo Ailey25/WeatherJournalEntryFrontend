@@ -7,10 +7,10 @@ import {
   getSettings,
   postSettings,
   setMessage
-} from '../../redux/actions/userSettings';
-import { toggleTempUnit } from '../../redux/actions/synchronous';
-import { getUserId } from '../../utility';
-import { CELCIUS, FAHRENHEIT } from '../../constants';
+} from '../../../redux/actions/userSettings';
+import { toggleTempUnit } from '../../../redux/actions/synchronous';
+import { getUserId } from '../../../utility';
+import { CELCIUS, FAHRENHEIT } from '../../../constants';
 
 class UserInfoContainer extends Component {
   async componentDidMount() {

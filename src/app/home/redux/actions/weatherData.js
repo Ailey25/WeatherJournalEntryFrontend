@@ -3,7 +3,7 @@ import {
   authenticationHeader,
   getRequestOptions,
   getUserId,
-  clearLocalStorage,
+  isClearLocalStorageOnStatusCode,
   formattedWeatherObjectForFrontend,
   formattedMainForFrontend,
   formattedWeathersForFrontend,
@@ -40,7 +40,9 @@ const postWeatherObject = (fetchUrl) => {
     dispatch(setIsPosting(true));
     await fetch(fetchUrl, requestOptions)
       .then(response => {
-        // if (response.status === STATUS_CODE.UNAUTHORIZED) clearLocalStorage();
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {
@@ -81,7 +83,9 @@ const getWeatherObject = (id, objectType) => {
     dispatch(setIsLoading(true));
     await fetch(BASE_URL + urlParam + id, getRequestOptions())
       .then(response => {
-        //if (response.status === STATUS_CODE.UNAUTHORIZED) clearLocalStorage();
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
         if (response.ok) {
           dispatch(setOk(true));
         } else {

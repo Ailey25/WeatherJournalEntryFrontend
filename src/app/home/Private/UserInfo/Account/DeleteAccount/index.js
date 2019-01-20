@@ -1,5 +1,5 @@
 import React from 'react';
-import { DELETE_ACCOUNT } from '../../../constants';
+import { DELETE_ACCOUNT } from '../../../../constants';
 
 const DeleteAccount = (props) => (
 	<div>

@@ -3,21 +3,16 @@ import { Route, Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import JournalList from './JournalList/index';
 import SaveJournalListButton from './SaveJournalListButton/index';
-import JournalContainer from '../Journal/index';
-import UserInfoContainer from '../UserInfo/index';
-import {
-  getJournalList,
-  postJournalList,
-  setMessage,
-} from '../redux/actions/journalList';
-import { deleteJournal } from '../redux/actions/synchronous';
-import { getUserId } from '../utility';
+import JournalListContainer from './JournalList/index';
+import JournalContainer from './Journal/index';
+import UserInfoContainer from './UserInfo/index';
+import { getJournalList, postJournalList, setMessage } from '../redux/actions/journalList';
+import { getUserId, isUserLoggedIn } from '../utility';
 
-class JournalListContainer extends Component {
+class PrivateContainer extends Component {
   async componentDidMount() {
-    this.props.resetMessage();
+    this.props.setMessage();
     await this.props.getJournalList();
   }
 
@@ -26,23 +21,19 @@ class JournalListContainer extends Component {
     if (userId) {
       await this.props.postJournalList(userId, this.props.journalList);
     } else {
-      console.log('userId not found: ');
+      this.props.setMessage('User id not found');
     }
-  }
-
-  handleJournalDelete = (e) => {
-    this.props.deleteJournal(this.props.journalList, e.currentTarget.id);
   }
 
   displayMessage = () => {
     if (this.props.isPosting) return <label>Saving journals...</label>
 
-    if (this.props.ok === undefined) {
-      return null;
-    } else if (this.props.ok === true) {
-      return <label>Success: {this.props.message}</label>
-    } else if (this.props.ok === false) {
-      return <label>Failed: {this.props.message}</label>
+    if (this.props.message !== '') {
+      if (this.props.ok === true) {
+        return <label>Success: {this.props.message}</label>
+      } else if (this.props.ok === false) {
+        return <label>Failed: {this.props.message}</label>
+      }
     }
   }
 
@@ -51,20 +42,16 @@ class JournalListContainer extends Component {
     return (
       <div>
         <ul>
-          <li><Link to="/private">See all journal entries</Link></li>
+          <li><Link to="/private/journal-list">See all journal entries</Link></li>
           <li><Link to="/private/journal-entry/create">Create new journal entry</Link></li>
-          <li><Link to="/private/user-settings">Settings</Link></li>
+          <li><Link to="/private/user-settings/settings">Settings</Link></li>
         </ul>
         <SaveJournalListButton
           handleJournalListPost={(e) => component.handleJournalListPost(e)}
         />
         {this.displayMessage()}
-        <Route exact path="/private" render={() => (
-          <JournalList
-            isLoading={component.props.isLoading}
-            journalList={component.props.journalList}
-            handleJournalDelete={(e) => component.handleJournalDelete(e)}
-          />
+        <Route path="/private/journal-list" render={() => (
+          <JournalListContainer journalList={component.props.journalList} />
         )} />
         <Route path="/private/journal-entry/:mode/:id?" render={(props) => (
           <JournalContainer key={props.match.params.mode} {...props} />
@@ -80,7 +67,6 @@ class JournalListContainer extends Component {
 const mapStateToProps = (state) => ({
   journalList: state.journalListReducer.journalList,
   isPosting: state.journalListReducer.isPosting,
-  isLoading: state.journalListReducer.isLoading,
   ok: state.journalListReducer.ok,
   message: state.journalListReducer.message,
 });
@@ -90,12 +76,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(getJournalList()),
   postJournalList: (id, journalList) =>
     dispatch(postJournalList(id, journalList)),
-  deleteJournal: (journalList, id) =>
-    dispatch(deleteJournal(journalList, id)),
-  resetMessage: () =>
+  setMessage: () =>
     dispatch(setMessage()),
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(JournalListContainer)
+  connect(mapStateToProps, mapDispatchToProps)(PrivateContainer)
 );

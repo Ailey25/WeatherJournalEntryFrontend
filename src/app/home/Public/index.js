@@ -12,7 +12,7 @@ class PublicContainer extends Component {
         <UserStateButtonContainer />
         <ul>
           <li><Link to="/public">Description</Link></li>
-          <li><Link to="/private">Private</Link></li>
+          <li><Link to="/private/journal-list">Private</Link></li>
         </ul>
         <AppDescription />
       </div>

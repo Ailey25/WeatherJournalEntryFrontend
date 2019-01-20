@@ -3,11 +3,10 @@ import { Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 
 import './App.css';
-import JournalListContainer from './home/JournalList/index';
+import PrivateContainer from './home/Private/index';
 import UserStateFormContainer from './home/UserStateForm/index'
 import PublicContainer from './home/Public/index';
 import PrivateRoute from './home/Routes/PrivateRoute/index';
-import { FORM } from './home/constants';
 
 class App extends Component {
   render() {
@@ -20,7 +19,7 @@ class App extends Component {
         <Route path="/register" render={(props) =>
           <UserStateFormContainer key={props.match.params} {...props} />
         } />
-        <PrivateRoute path="/private" component={JournalListContainer} />
+        <PrivateRoute path="/private/" component={PrivateContainer} />
       </div>
     );
   }

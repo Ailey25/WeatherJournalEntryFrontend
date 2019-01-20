@@ -7,9 +7,9 @@ import {
   getProfile,
   postProfile,
   setMessage
-} from '../../redux/actions/userSettings';
-import { getUserId } from '../../utility';
-import { FIRSTNAME, LASTNAME } from '../../constants';
+} from '../../../redux/actions/userSettings';
+import { getUserId } from '../../../utility';
+import { FIRSTNAME, LASTNAME } from '../../../constants';
 
 class ProfileContainer extends Component {
   constructor(props) {
@@ -22,10 +22,12 @@ class ProfileContainer extends Component {
 
   async componentDidMount() {
     await this.props.getProfile();
-    this.setState({
-      firstname: this.props.firstname,
-      lastname: this.props.lastname,
-    })
+    if (this.props.ok) {
+      this.setState({
+        firstname: this.props.firstname,
+        lastname: this.props.lastname,
+      });
+    }
   }
 
   handleProfileChange = (e) => {
@@ -50,6 +52,7 @@ class ProfileContainer extends Component {
       firstname: this.state.firstname,
       lastname: this.state.lastname
     };
+
     await this.props.postProfile(user);
   }
 
@@ -69,6 +72,7 @@ class ProfileContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  ok: state.userSettingsReducer.ok,
   firstname: state.userSettingsReducer.firstname,
   lastname: state.userSettingsReducer.lastname,
 });

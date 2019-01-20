@@ -1,5 +1,5 @@
 import React from 'react';
-import { OLD_PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD } from '../../../constants';
+import { OLD_PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD } from '../../../../constants';
 
 const UpdatePassword = (props) => (
 	<div>

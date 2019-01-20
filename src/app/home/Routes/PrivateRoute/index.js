@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
 import { store } from '../../../../index';
-import JournalListContainer from '../../JournalList/index';
 import { isUserLoggedIn } from '../../utility';
 
 const PrivateRoute = ({component: Component, ...rest}) => {

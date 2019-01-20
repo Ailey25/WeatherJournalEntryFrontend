@@ -9,21 +9,21 @@ import JournalHeader from './JournalHeader/index';
 import JournalBody from './JournalBody/index';
 import JournalPostWeatherDataInputs from './JournalPostWeatherDataInputs/index';
 import JournalPostWeatherDataResults from './JournalPostWeatherDataResults/index';
-import { setJournalMode, addJournal, editJournal } from '../redux/actions/synchronous';
-import { postWeatherData, setMessage } from '../redux/actions/weatherData';
+import { setJournalMode, addJournal, editJournal } from '../../redux/actions/synchronous';
+import { postWeatherData, setMessage } from '../../redux/actions/weatherData';
 import {
   CREATE, EDIT,
   CITY_ID, CITY_NAME,
   BASE_URL,
   CITY_NAME_VALIDATION_STATUS, CITY_NAME_VALIDATION_MESSAGE,
   CITY_ID_VALIDATION_STATUS, CITY_ID_VALIDATION_MESSAGE,
-} from '../constants'
+} from '../../constants'
 import {
   validateCityName,
   validateCityId,
   setDataWeatherPostUrl,
   getUserId,
-} from '../utility';
+} from '../../utility';
 
 class JournalContainer extends Component {
   constructor(props) {
@@ -130,11 +130,7 @@ class JournalContainer extends Component {
       if (this.updateJournalEntryList()) {
         this.resetState();
       }
-      this.props.setMessage(
-        'Journal entry edited/added!\
-        Re-enter to see updated weather info\
-        [Might add another page to redirect to later]'
-      );
+      this.props.history.push('/private/journal-list');
     } else {
       this.props.setMessage('Journal entry could not be added - Invalid location');
     }

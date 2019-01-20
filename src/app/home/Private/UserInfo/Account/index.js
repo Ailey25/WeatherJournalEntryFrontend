@@ -10,9 +10,9 @@ import {
   postUsername,
   deleteAccount,
   setMessage
-} from '../../redux/actions/userSettings';
-import { getUserId } from '../../utility';
-import { OLD_PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD } from '../../constants';
+} from '../../../redux/actions/userSettings';
+import { getUserId, clearLocalStorage } from '../../../utility';
+import { OLD_PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD } from '../../../constants';
 
 class AccountContainer extends Component {
   constructor(props) {
@@ -68,8 +68,8 @@ class AccountContainer extends Component {
     await this.props.deleteAccount();
 
     if (this.props.ok) {
-      // clear localStorage
-      //this.history.push('/');
+      clearLocalStorage();
+      this.props.history.push("/");
     }
   }
 
