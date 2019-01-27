@@ -21,6 +21,8 @@ class ProfileContainer extends Component {
   }
 
   async componentDidMount() {
+    this.props.resetMessage();
+
     await this.props.getProfile();
     if (this.props.ok) {
       this.setState({

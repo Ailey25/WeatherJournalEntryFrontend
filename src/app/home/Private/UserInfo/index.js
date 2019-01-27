@@ -1,27 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Route, withRouter } from 'react-router-dom';
+import { Link, Route, withRouter } from 'react-router-dom';
 
 import SettingsContainer from './Settings/index';
 import ProfileContainer from './Profile/index';
 import AccountContainer from './Account/index';
+import { setMessage } from '../../redux/actions/userSettings';
 
 class UserInfoContainer extends Component {
-  handleClick = (e) => {
-    switch(e.currentTarget.id) {
-      case 'settings':
-        this.props.history.push('/private/user-settings/settings');
-        return;
-      case 'profile':
-        this.props.history.push('/private/user-settings/profile');
-        return;
-      case 'account':
-        this.props.history.push('/private/user-settings/account');
-        return;
-      default:
-        console.log('settings container id ' + e.currentTarget.id + ' not recognized');
-        return;
-    }
+  componentDidMount() {
+    this.props.resetMessage();
   }
 
   displayMessage = () => {
@@ -38,17 +26,11 @@ class UserInfoContainer extends Component {
     const component = this;
     return(
       <div>
-        <div>
-          <button id="settings" onClick={component.handleClick}>
-            Settings
-          </button>
-          <button id="profile" onClick={component.handleClick}>
-            Profile
-          </button>
-          <button id="account" onClick={component.handleClick}>
-            Account
-          </button>
-        </div>
+        <ul>
+          <li><Link to="/private/user-settings/settings">Settings</Link></li>
+          <li><Link to="/private/user-settings/profile">Profile</Link></li>
+          <li><Link to="/private/user-settings/account">Account</Link></li>
+        </ul>
         {this.displayMessage()}
         <Route path ="/private/user-settings/settings" render={() => (
           <SettingsContainer />
@@ -70,9 +52,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
+  resetMessage: () =>
+    dispatch(setMessage()),
 });
 
 export default withRouter(
-  connect(mapStateToProps, null)(UserInfoContainer)
+  connect(mapStateToProps, mapDispatchToProps)(UserInfoContainer)
 );

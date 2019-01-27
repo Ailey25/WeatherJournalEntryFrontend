@@ -25,6 +25,10 @@ class AccountContainer extends Component {
     }
   }
 
+  componentDidMount() {
+    this.props.resetMessage();
+  }
+
   handlePasswordChange = (e) => {
     switch(e.currentTarget.id) {
       case OLD_PASSWORD:

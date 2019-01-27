@@ -10,10 +10,11 @@ import {
 } from '../../../redux/actions/userSettings';
 import { toggleTempUnit } from '../../../redux/actions/synchronous';
 import { getUserId } from '../../../utility';
-import { CELCIUS, FAHRENHEIT } from '../../../constants';
 
 class UserInfoContainer extends Component {
   async componentDidMount() {
+    this.props.resetMessage();
+
     await this.props.getSettings();
   }
 
@@ -22,11 +23,7 @@ class UserInfoContainer extends Component {
   }
 
   handleSettingsPost = async (e) => {
-    if (getUserId()) {
-      await this.props.postSettings({ tempUnit: this.props.tempUnit });
-    } else {
-      //logout
-    }
+    await this.props.postSettings({ tempUnit: this.props.tempUnit });
   }
 
   render() {

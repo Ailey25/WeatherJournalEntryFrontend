@@ -1,7 +1,7 @@
 import React from 'react';
 
 const AppDescription = (props) => (
-  <label>App description!</label>
+  <label>Create and manage your weather journals.</label>
 );
 
 export default AppDescription;

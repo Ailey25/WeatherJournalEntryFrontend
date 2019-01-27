@@ -34,7 +34,7 @@ const GATEWAY_TIMEOUT = 'GATEWAY_TIMEOUT';
 
 export const STATUS_CODE = {
   [UNAUTHORIZED]: 401,
-  [GATEWAY_TIMEOUT]: 501,
+  [GATEWAY_TIMEOUT]: 504,
 };
 
 // submission validation
