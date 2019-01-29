@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  BASE_URL,
+  API_URL,
   EDIT, CREATE,
   CITY_NAME, CITY_ID,
   CELCIUS, FAHRENHEIT,
@@ -33,7 +33,7 @@ export const setDataWeatherPostUrl = (
 ) => {
   try {
     if (weatherObjectId === '') throw 'weatherObjectId is empty';
-    let fetchUrl = BASE_URL;
+    let fetchUrl = API_URL;
     switch (mode) {
       case EDIT:
         if (cityId === '') throw 'cityid is empty';

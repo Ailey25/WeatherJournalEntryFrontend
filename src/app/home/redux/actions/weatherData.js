@@ -9,7 +9,7 @@ import {
   formattedWeathersForFrontend,
 } from '../../utility';
 import {
-  BASE_URL,
+  API_URL,
   STATUS_CODE,
   WEATHER_OBJECT,
   MAIN,
@@ -81,7 +81,7 @@ const getWeatherObject = (id, objectType) => {
 
   return async dispatch => {
     dispatch(setIsLoading(true));
-    await fetch(BASE_URL + urlParam + id, getRequestOptions())
+    await fetch(API_URL + urlParam + id, getRequestOptions())
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');

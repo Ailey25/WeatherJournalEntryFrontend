@@ -1,5 +1,5 @@
 import * as types from '../types';
-import { BASE_URL, STATUS_CODE } from '../../constants';
+import { API_URL, STATUS_CODE } from '../../constants';
 import {
   authenticationHeader,
   getRequestOptions,
@@ -22,7 +22,7 @@ export const postJournalList = (id, journalList) => {
 
   return async dispatch => {
     dispatch(setIsPosting(true));
-     await fetch(BASE_URL + '/user/journal-list', requestOptions)
+     await fetch(API_URL + '/user/journal-list', requestOptions)
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');
@@ -49,7 +49,7 @@ export const postJournalList = (id, journalList) => {
 export const getJournalList = () => {
   return async dispatch => {
     dispatch(setIsLoading(true));
-    await fetch(BASE_URL + '/user/journal-list/' + getUserId(), getRequestOptions())
+    await fetch(API_URL + '/user/journal-list/' + getUserId(), getRequestOptions())
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');

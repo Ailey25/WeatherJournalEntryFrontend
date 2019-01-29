@@ -1,4 +1,4 @@
-export const BASE_URL = '/api/values';
+export const API_URL = process.env.API_URL + '/api/values';
 
 // weather stamp
 export const CELCIUS = 'C';

@@ -1,10 +1,23 @@
 const path = require("path");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const envFile = process.env.NODE_ENV === 'production'
+  ? '/.env.production'
+  : '/.env.development';
+const dotenv = require('dotenv').config({path: __dirname + envFile});
+
+module.export = {
+  API_URL: process.env.API_URL
+}
+
+const mode = process.env.NODE_ENV === 'production'
+  ? 'production'
+  : 'development';
 module.exports = {
   entry: "./src/index.js",
-  mode: "development",
   devtool: "cheap-module-source-map",
+  mode: mode,
   module: {
     rules: [
       {
@@ -22,7 +35,6 @@ module.exports = {
   resolve: { extensions: ["*", ".js", ".jsx"] },
   output: {
     path: path.resolve(__dirname, "dist/"),
-    publicPath: "/dist/",
     filename: "bundle.js"
   },
   devServer: {
@@ -31,14 +43,14 @@ module.exports = {
     publicPath: "http://localhost:3000/dist/",
     hotOnly: true,
     historyApiFallback: true,
-    proxy: {
-      "/api": {
-        changeOrigin: true,
-        logLevel: "debug",
-        secure: false,
-        target: "https://localhost:5001",
-      },
-    }
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'public/index.html'
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.API_URL': JSON.stringify(process.env.API_URL),
+    }),
+  ]
 };

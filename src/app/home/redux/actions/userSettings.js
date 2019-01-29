@@ -1,5 +1,5 @@
 import * as types from '../types';
-import { BASE_URL, STATUS_CODE } from '../../constants';
+import { API_URL, STATUS_CODE } from '../../constants';
 import {
   authenticationHeader,
   getRequestOptions,
@@ -21,7 +21,7 @@ export const postSettings = (settings) => {
 
   return async dispatch => {
     dispatch(setIsPosting(true));
-    await fetch(BASE_URL + '/user/settings/', requestOptions)
+    await fetch(API_URL + '/user/settings/', requestOptions)
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');
@@ -55,7 +55,7 @@ export const postProfile = (user) => {
 
   return async dispatch => {
     dispatch(setIsPosting(true));
-    await fetch(BASE_URL + '/user/profile/' + getUserId(), requestOptions)
+    await fetch(API_URL + '/user/profile/' + getUserId(), requestOptions)
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');
@@ -89,7 +89,7 @@ export const postPassword = (user, oldPassword) => {
 
   return async dispatch => {
     dispatch(setIsPosting(true));
-    await fetch(BASE_URL + '/user/password/' + getUserId() + '/' + oldPassword, requestOptions)
+    await fetch(API_URL + '/user/password/' + getUserId() + '/' + oldPassword, requestOptions)
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');
@@ -123,7 +123,7 @@ export const postUsername = (user) => {
 
   return async dispatch => {
     dispatch(setIsPosting(true));
-    await fetch(BASE_URL + '/user/username/' + getUserId(), requestOptions)
+    await fetch(API_URL + '/user/username/' + getUserId(), requestOptions)
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');
@@ -155,7 +155,7 @@ export const deleteAccount = () => {
 
   return async dispatch => {
     dispatch(setIsPosting(true));
-    await fetch(BASE_URL + '/user/' + getUserId(), requestOptions)
+    await fetch(API_URL + '/user/' + getUserId(), requestOptions)
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');
@@ -179,7 +179,7 @@ export const deleteAccount = () => {
 export const getSettings = () => {
   return async dispatch => {
     dispatch(setIsLoading(true));
-    await fetch(BASE_URL + '/user/settings/' + getUserId(), getRequestOptions())
+    await fetch(API_URL + '/user/settings/' + getUserId(), getRequestOptions())
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');
@@ -208,7 +208,7 @@ export const getSettings = () => {
 export const getProfile = () => {
   return async dispatch => {
     dispatch(setIsLoading(true));
-    await fetch(BASE_URL + '/user/' + getUserId(), getRequestOptions())
+    await fetch(API_URL + '/user/' + getUserId(), getRequestOptions())
       .then(response => {
         if (isClearLocalStorageOnStatusCode(response.status)) {
           throw new Error('Unauthorized');
