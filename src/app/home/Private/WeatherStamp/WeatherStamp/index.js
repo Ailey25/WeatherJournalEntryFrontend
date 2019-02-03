@@ -8,20 +8,26 @@ const WeatherStamp = (props) => {
   if (props.isLoading) return(<div>Loading weather info...</div>);
 
   let convertedTemp = calcTemp(props.temp, props.unit);
+  let displayWeathers = (weathers) => {
+    if (weathers === undefined || weathers.length === 0) {
+      return (<div></div>);
+    }
+    let list = weathers.map((weather) => (
+      <label key={weather.weatherId}>
+        <img src={"http://openweathermap.org/img/w/" + weather.icon + ".png"} />
+        {weather.description}&nbsp;
+      </label>
+    ));
+    return (<div>{list}</div>);
+  };
 
   return (
     <div>
       <label>{props.cityName}</label>
-      <br></br>
-      <label>{convertedTemp}<sup>°{props.unit}</sup></label>
-      <br></br>
-      { // weather descriptions
-        props.weather.map((weather) => (
-          <label key={weather.weatherId}>
-            {weather.description}&nbsp;
-          </label>
-        ))
-      }
+      <div>
+        <label>{convertedTemp}<sup>°{props.unit}</sup></label>
+      </div>
+      {displayWeathers(props.weather)}
     </div>
   );
 }

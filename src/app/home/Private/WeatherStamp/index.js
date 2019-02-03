@@ -35,7 +35,8 @@ class WeatherStampContainer extends Component {
         cityName={component.props.weatherObject.cityName}
         unit={component.props.tempUnit}
         temp={component.props.main.temp}
-        weather={component.props.weather} />
+        weather={component.props.weather}
+      />
     );
   }
 }

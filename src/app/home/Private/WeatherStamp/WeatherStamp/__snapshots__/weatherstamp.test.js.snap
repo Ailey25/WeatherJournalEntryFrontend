@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WeatherStamp [mount] renders props correctly 1`] = `
+<WeatherStamp
+  cityName="test city name"
+  isLoading={false}
+  mode="create"
+  temp="0"
+  unit="C"
+  weather={
+    Array [
+      Object {
+        "description": "Really cold",
+        "weatherId": "1",
+      },
+      Object {
+        "description": "Rain everywhere",
+        "weatherId": "2",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`WeatherStamp [shallow] renders without crashing 1`] = `
+<div>
+  <label />
+  <br />
+  <label>
+    <sup>
+      °
+    </sup>
+  </label>
+  <br />
+  <div />
+</div>
+`;
+
+exports[`WeatherStamp with default props [mount] 1`] = `
+<WeatherStamp
+  cityName=""
+  isLoading={false}
+  mode={
+    Object {
+      "CREATE": "create",
+    }
+  }
+  temp={NaN}
+  unit="C"
+  weather={Array []}
+>
+  <div>
+    <label />
+    <br />
+    <label>
+      NaN
+      <sup>
+        °
+        C
+      </sup>
+    </label>
+    <br />
+    <div />
+  </div>
+</WeatherStamp>
+`;
+
+exports[`WeatherStamp with default props [shallow] 1`] = `
+<div>
+  <label />
+  <br />
+  <label>
+    NaN
+    <sup>
+      °
+      C
+    </sup>
+  </label>
+  <br />
+  <div />
+</div>
+`;
