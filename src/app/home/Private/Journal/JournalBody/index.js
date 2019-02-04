@@ -1,26 +1,24 @@
 import React from 'react';
 
+import { Input, TextArea } from '../styles';
+
 export const JournalBody = (props) => {
   return(
-    <div>
-      <form onSubmit={(e) => props.handleSubmit(e)}>
-        <section id="journal">
-          <input id="title"
-            placeholder="Enter journal title"
-            value={props.title}
-            onChange = {(e) => props.handleChange(e)}>
-          </input>
-        </section>
-        <section>
-          <textarea id="entry"
-            rows="10" cols="50"
-            placeholder="Your journal entry"
-            value={props.entry}
-            onChange={(e) => props.handleChange(e)}>
-          </textarea>
-        </section>
-      </form>
-    </div>
+    <form onSubmit={(e) => props.handleSubmit(e)}>
+      <div className="column">
+        <Input id="title"
+          placeholder="Journal title"
+          value={props.title}
+          onChange = {(e) => props.handleChange(e)}
+        />
+        <TextArea id="entry"
+          rows="10" cols="50"
+          placeholder="Journal entry"
+          value={props.entry}
+          onChange={(e) => props.handleChange(e)}>
+        </TextArea>
+      </div>
+    </form>
   )
 };
 

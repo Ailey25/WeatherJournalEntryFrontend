@@ -63,6 +63,7 @@ class ProfileContainer extends Component {
     return(
       <div>
         <UpdateProfile
+          username={component.props.username}
           firstname={component.state.firstname}
           lastname={component.state.lastname}
           handleProfilePost={(e) => component.handleProfilePost(e)}
@@ -75,6 +76,7 @@ class ProfileContainer extends Component {
 
 const mapStateToProps = (state) => ({
   ok: state.userSettingsReducer.ok,
+  username: state.userSettingsReducer.username,
   firstname: state.userSettingsReducer.firstname,
   lastname: state.userSettingsReducer.lastname,
 });

@@ -12,6 +12,7 @@ const userSettingsInitialState = {
   isPosting: false,
   isLoading: false,
   tempUnit: CELCIUS,
+  username: '',
   firstname: '',
   lastname: '',
   ok: false,
@@ -95,6 +96,7 @@ export const userSettingsReducer = (state = userSettingsInitialState, action) =>
     case types.SET_PROFILE:
       return {
         ...state,
+        username: action.username,
         firstname: action.firstname,
         lastname: action.lastname,
       };

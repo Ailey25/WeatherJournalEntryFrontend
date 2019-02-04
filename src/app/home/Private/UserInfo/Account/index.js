@@ -11,8 +11,10 @@ import {
   deleteAccount,
   setMessage
 } from '../../../redux/actions/userSettings';
+import { getJournalList } from '../../../redux/actions/journalList';
 import { getUserId, clearLocalStorage } from '../../../utility';
 import { OLD_PASSWORD, NEW_PASSWORD, CONFIRM_PASSWORD } from '../../../constants';
+import { APP_URL } from '../../../Routes/constants';
 
 class AccountContainer extends Component {
   constructor(props) {
@@ -69,12 +71,17 @@ class AccountContainer extends Component {
   }
 
   handleDeleteAccountPost= async (e) => {
-    await this.props.deleteAccount();
+    // get related user info: weather
+    await this.props.getJournalList();
+    if (!this.props.journalsOk) return;
+    let weatherObjectIds = this.props.journalList.map(journal => journal.id);
 
-    if (this.props.ok) {
-      clearLocalStorage();
-      this.props.history.push("/");
-    }
+    // delete user account and related user info
+    await this.props.deleteAccount(weatherObjectIds);
+    if (!this.props.userOk) return;
+
+    clearLocalStorage();
+    this.props.history.push(APP_URL.HOME_TAB);
   }
 
   render() {
@@ -102,7 +109,9 @@ class AccountContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ok: state.userSettingsReducer.ok,
+  userOk: state.userSettingsReducer.ok,
+  journalList: state.journalListReducer.journalList,
+  journalsOk: state.journalListReducer.ok,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -110,10 +119,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(postPassword(user, oldPassword)),
   updateUsername: (user) =>
     dispatch(postUsername(user)),
-  deleteAccount: () =>
-    dispatch(deleteAccount()),
+  deleteAccount: (weatherIds) =>
+    dispatch(deleteAccount(weatherIds)),
   resetMessage: () =>
     dispatch(setMessage()),
+  getJournalList: () =>
+    dispatch(getJournalList()),
 });
 
 export default withRouter(

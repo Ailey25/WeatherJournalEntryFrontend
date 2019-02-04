@@ -1,9 +1,10 @@
 import React from 'react';
+import { StyledUserStateButton as Button } from '../styles';
 
 const LogoutButton = (props) => (
-  <button id="logout"
+  <Button id="logout"
     onClick={(e) => props.handleClick(e)}>Log out
-  </button>
+  </Button>
 );
 
 export default LogoutButton;

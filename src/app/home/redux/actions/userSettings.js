@@ -147,7 +147,46 @@ export const postUsername = (user) => {
   }
 };
 
-export const deleteAccount = () => {
+export const deleteAccount = (weatherObjectIds) => (
+  async dispatch => {
+    if (weatherObjectIds) {
+      await weatherObjectIds.map(weatherObjectId =>
+        dispatch(deleteWeatherList(weatherObjectId))
+      );
+    }
+    await dispatch(deleteUser());
+  }
+);
+
+const deleteWeatherList = (weatherObjectId) => {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: { ...authenticationHeader(), 'Content-Type': 'application/json' },
+  };
+
+  return async dispatch => {
+    dispatch(setIsPosting(true));
+    await fetch(API_URL + '/weatherobject/' + weatherObjectId, requestOptions)
+      .then(response => {
+        if (isClearLocalStorageOnStatusCode(response.status)) {
+          throw new Error('Unauthorized');
+        }
+        if (response.ok) {
+          dispatch(setOk(true));
+          dispatch(setIsPosting(false));
+        } else {
+          throw new Error('Account related data can\'t be deleted');
+        }
+      })
+      .catch((error) => {
+        dispatch(setOk(false));
+        dispatch(setMessage(error.message));
+        dispatch(setIsPosting(false));
+      })
+  };
+};
+
+const deleteUser = () => {
   const requestOptions = {
     method: 'DELETE',
     headers: { ...authenticationHeader(), 'Content-Type': 'application/json' },
@@ -167,6 +206,7 @@ export const deleteAccount = () => {
           dispatch(setOk(false));
           dispatch(setMessage('Account can\'t be deleted'));
         }
+        dispatch(setIsPosting(false));
       })
       .catch((error) => {
         dispatch(setOk(false));
@@ -261,6 +301,7 @@ const setSettings= (settings) => ({
 
 const setProfile = (user) => ({
   type: types.SET_PROFILE,
+  username: user.username,
   firstname: user.firstname,
   lastname: user.lastname,
 });

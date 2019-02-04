@@ -3,32 +3,45 @@ import React from 'react';
 import { CREATE } from '../../../constants';
 import { calcTemp } from '../../../utility.js';
 
+import { WeatherStampStyle, ImageContainer, Label } from './styles';
+
 const WeatherStamp = (props) => {
   if (props.mode === CREATE) return null;
   if (props.isLoading) return(<div>Loading weather info...</div>);
 
-  let convertedTemp = calcTemp(props.temp, props.unit);
+  let convertedTemp = calcTemp(props.temp, props.unit).toString();
+
   let displayWeathers = (weathers) => {
     if (weathers === undefined || weathers.length === 0) {
-      return (<div></div>);
+      return (<div className="columnCenter"></div>);
     }
+
     let list = weathers.map((weather) => (
-      <label key={weather.weatherId}>
-        <img src={"http://openweathermap.org/img/w/" + weather.icon + ".png"} />
-        {weather.description}&nbsp;
-      </label>
+      <div key={weather.weatherId} className="row">
+        <ImageContainer>
+          <img src={"http://openweathermap.org/img/w/" + weather.icon + ".png"} />
+        </ImageContainer>
+        <div className="columnCenter">
+          <label>{weather.description}</label>
+        </div>
+      </div>
     ));
-    return (<div>{list}</div>);
+    return (<div className="columnCenter">{list}</div>);
   };
 
   return (
-    <div>
-      <label>{props.cityName}</label>
-      <div>
-        <label>{convertedTemp}<sup>°{props.unit}</sup></label>
+    <WeatherStampStyle>
+      <div className="column">
+        <label>{props.cityName}</label>
+        <div className="row flexEnd">
+          <Label size="2em">{convertedTemp}</Label>
+          <sup>
+            <Label size="1.5em">°{props.unit}</Label>
+          </sup>
+        </div>
       </div>
       {displayWeathers(props.weather)}
-    </div>
+    </WeatherStampStyle>
   );
 }
 

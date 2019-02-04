@@ -14,8 +14,6 @@ export const login = (username, password) => {
     dispatch(setIsAuthenticating(true));
     await fetch(API_URL + '/user/authenticate', requestOptions)
       .then(response => {
-        console.log('url' + API_URL)
-        //https://localhost:5001/api/values
         if (response.status === STATUS_CODE.GATEWAY_TIMEOUT) {
           throw new Error('Server is currently offline');
         }

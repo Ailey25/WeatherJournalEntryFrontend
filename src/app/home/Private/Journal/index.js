@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom';
-import 'babel-polyfill';
+import { Link, withRouter } from 'react-router-dom';
 import uuidv4 from 'uuid/v4';
 
 import WeatherStampContainer from '../WeatherStamp/index';
@@ -10,7 +9,14 @@ import JournalBody from './JournalBody/index';
 import JournalPostWeatherDataInputs from './JournalPostWeatherDataInputs/index';
 import JournalPostWeatherDataResults from './JournalPostWeatherDataResults/index';
 import { setJournalMode, addJournal, editJournal } from '../../redux/actions/synchronous';
-import { postWeatherData, setMessage } from '../../redux/actions/weatherData';
+import {
+  postWeatherData,
+  setMessage as setWeatherMessage
+} from '../../redux/actions/weatherData';
+import {
+  postJournalList,
+  setMessage as setJournalMessage
+} from '../../redux/actions/journalList';
 import {
   CREATE, EDIT,
   CITY_ID, CITY_NAME,
@@ -24,6 +30,9 @@ import {
   setDataWeatherPostUrl,
   getUserId,
 } from '../../utility';
+import { APP_URL } from '../../Routes/constants';
+
+import { JournalStyle, InputSubmit, StyledLink, Label } from './styles';
 
 class JournalContainer extends Component {
   constructor(props) {
@@ -38,7 +47,8 @@ class JournalContainer extends Component {
   }
 
   componentDidMount() {
-    this.props.setMessage('');
+    this.props.setJournalMessage('');
+    this.props.setWeatherMessage('');
     if (this.props.match.params.mode === CREATE) {
       this.setState({
         id: uuidv4()
@@ -53,7 +63,7 @@ class JournalContainer extends Component {
         callType: CITY_ID,
       });
     } else {
-      this.props.setMessage('Journal mode not recognized');
+      this.props.setJournalMessage('Journal mode not recognized');
     }
   }
 
@@ -101,7 +111,7 @@ class JournalContainer extends Component {
         });
         break;
       default:
-        this.props.setMessage(
+        this.props.setJournalMessage(
           'handleChange: current target id ' + e.currentTarget.id + ' not handled'
         );
         break;
@@ -125,15 +135,21 @@ class JournalContainer extends Component {
     );
 
     await this.props.postWeatherData(fetchUrl);
-
-    if (this.props.ok) {
-      if (this.updateJournalEntryList()) {
-        this.resetState();
-      }
-      this.props.history.push('/private/journal-list');
-    } else {
-      this.props.setMessage('Journal entry could not be added - Invalid location');
+    if (!this.props.weatherOk) {
+      this.props.setWeatherMessage('Journal entry could not be added - Invalid location');
+      return;
     }
+
+    let userId = getUserId();
+    if (this.updateJournalEntryList()) this.resetState();
+
+    await this.props.postJournalList(userId, this.props.journalList);
+    if (!this.props.journalOk) {
+      this.props.setJournalMessage('Journals could not be saved');
+      return;
+    }
+
+    this.props.history.push(APP_URL.JOURNALS_TAB);
   }
 
   updateJournalEntryList = () => {
@@ -152,7 +168,7 @@ class JournalContainer extends Component {
         this.props.editJournal(this.props.journalList, journal);
         return true;
       default:
-        this.props.setMessage('Journal entry mode not recognized');
+        this.props.setJournalMessage('Journal entry mode not recognized');
         return false;
     }
   }
@@ -162,12 +178,12 @@ class JournalContainer extends Component {
       case CITY_NAME:
         const cityNameValidationStatus = validateCityName(this.state.callParamsString);
         if (cityNameValidationStatus === CITY_NAME_VALIDATION_STATUS.SUCCESS) return true;
-        this.props.setMessage(CITY_NAME_VALIDATION_MESSAGE[cityNameValidationStatus]);
+        this.props.setJournalMessage(CITY_NAME_VALIDATION_MESSAGE[cityNameValidationStatus]);
         return false;
       case CITY_ID:
         const cityIdValidationStatus = validateCityId(this.state.callParamsString);
         if (cityIdValidationStatus === CITY_ID_VALIDATION_STATUS.SUCCESS) return true;
-        this.props.setMessage(CITY_ID_VALIDATION_MESSAGE[cityIdValidationStatus]);
+        this.props.setJournalMessage(CITY_ID_VALIDATION_MESSAGE[cityIdValidationStatus]);
         return false;
       default:
         return false;
@@ -181,16 +197,19 @@ class JournalContainer extends Component {
       title: '',
       entry: '',
     });
-    this.props.setMessage('');
+    this.props.setWeatherMessage('');
+    this.props.setJournalMessage('');
   }
 
   render() {
     const component = this;
     return (
-      <div>
+      <JournalStyle>
+        <StyledLink to={APP_URL.JOURNALS_TAB}>Back to journal entries</StyledLink>
         <JournalHeader
           mode={component.props.match.params.mode}
         />
+        <hr></hr>
         <WeatherStampContainer id={component.props.match.params.id}
           mode={component.props.match.params.mode}
         />
@@ -207,24 +226,28 @@ class JournalContainer extends Component {
           check={component.state.callType}
           callParamsString={component.state.callParamsString}
         />
-        <form onSubmit={this.handleSubmit}>
-        <input type="submit"></input>
+        <form className="column" onSubmit={this.handleSubmit}>
+          <InputSubmit type="submit" />
+          <Label example>Will automatically save journals</Label>
         </form>
         <JournalPostWeatherDataResults
-          isLoading={component.props.isPosting}
-          message={component.props.message}
+          isLoading={component.props.weatherIsPosting}
+          message={component.props.weatherMessage}
         />
-      </div>
+      </JournalStyle>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  isPosting: state.weatherReducer.isPosting,
-  journalList: state.journalListReducer.journalList,
+  weatherIsPosting: state.weatherReducer.isPosting,
   weatherObject: state.weatherReducer.weatherObject,
-  ok: state.weatherReducer.ok,
-  message: state.weatherReducer.message,
+  weatherOk: state.weatherReducer.ok,
+  weatherMessage: state.weatherReducer.message,
+  journalIsPosting: state.journalListReducer.isPosting,
+  journalList: state.journalListReducer.journalList,
+  journalOk: state.journalListReducer.ok,
+  journalMessage: state.journalListReducer.message,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -234,8 +257,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(editJournal(journalList, journal)),
   postWeatherData: (fetchUrl) =>
     dispatch(postWeatherData(fetchUrl)),
-  setMessage: (message) =>
-    dispatch(setMessage(message)),
+  setWeatherMessage: (message) =>
+    dispatch(setWeatherMessage(message)),
+  postJournalList: (id, journalList) =>
+    dispatch(postJournalList(id, journalList)),
+  setJournalMessage: (message) =>
+    dispatch(setJournalMessage(message)),
 });
 
 export default withRouter(

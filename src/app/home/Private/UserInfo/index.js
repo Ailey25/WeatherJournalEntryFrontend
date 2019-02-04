@@ -6,6 +6,9 @@ import SettingsContainer from './Settings/index';
 import ProfileContainer from './Profile/index';
 import AccountContainer from './Account/index';
 import { setMessage } from '../../redux/actions/userSettings';
+import { APP_URL } from '../../Routes/constants';
+
+import { UserInfoStyle, StyledLink } from './styles';
 
 class UserInfoContainer extends Component {
   componentDidMount() {
@@ -25,23 +28,24 @@ class UserInfoContainer extends Component {
   render() {
     const component = this;
     return(
-      <div>
-        <ul>
-          <li><Link to="/private/user-settings/settings">Settings</Link></li>
-          <li><Link to="/private/user-settings/profile">Profile</Link></li>
-          <li><Link to="/private/user-settings/account">Account</Link></li>
-        </ul>
+      <UserInfoStyle>
+        <StyledLink to={APP_URL.SETTINGS_TAB + '/settings'}>Settings</StyledLink>
+        <StyledLink to={APP_URL.SETTINGS_TAB + '/profile'}>Profile</StyledLink>
+        <StyledLink to={APP_URL.SETTINGS_TAB + '/account'}>Account</StyledLink>
         {this.displayMessage()}
-        <Route path ="/private/user-settings/settings" render={() => (
+        <Route exact path={APP_URL.SETTINGS_TAB} render={() => (
           <SettingsContainer />
         )} />
-        <Route path ="/private/user-settings/profile" render={() => (
+        <Route path={APP_URL.SETTINGS_TAB + '/settings'} render={() => (
+          <SettingsContainer />
+        )} />
+        <Route path={APP_URL.SETTINGS_TAB + '/profile'} render={() => (
           <ProfileContainer />
         )} />
-        <Route path ="/private/user-settings/account" render={() => (
+        <Route path={APP_URL.SETTINGS_TAB + '/account'} render={() => (
           <AccountContainer />
         )} />
-      </div>
+      </UserInfoStyle>
     );
   }
 }

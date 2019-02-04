@@ -5,17 +5,20 @@ import { withRouter } from 'react-router-dom';
 import LoginForm from './LoginForm/index';
 import RegisterForm from './RegisterForm/index';
 import {
+  login,
+  register,
+  setMessage,
+} from '../redux/actions/userState';
+import {
   BASE_URL,
   USERNAME,
   FIRSTNAME,
   LASTNAME,
   PASSWORD
 } from '../constants';
-import {
-  login,
-  register,
-  setMessage,
-} from '../redux/actions/userState';
+import { APP_URL } from '../Routes/constants';
+
+import { UserStateForm } from './styles';
 
 class UserStateFormContainer extends Component {
   constructor(props) {
@@ -59,11 +62,8 @@ class UserStateFormContainer extends Component {
   	await this.props.login(this.state.username, this.state.password);
 
     // if logged in successfully, redirect to private page
-    // and get related user info
     if (this.props.ok) {
-      this.props.history.push("/private");
-      //getUserInfo(id);
-      //getSettings(id);
+      this.props.history.push(APP_URL.JOURNALS_TAB);
     }
   }
 
@@ -84,17 +84,14 @@ class UserStateFormContainer extends Component {
     }
 
     // if logged in successfully, redirect to private page
-    // and get related user info
     if (this.props.ok) {
-      this.props.history.push("/private");
-      //getUserInfo(id);
-      //getSettings(id);
+      this.props.history.push(APP_URL.JOURNALS_TAB);
     }
   }
 
   displayForm = () => {
   	const component = this;
-  	if (this.props.location.pathname === '/login') {
+  	if (this.props.location.pathname === APP_URL.LOGIN) {
   		return(
   			<LoginForm
   				username={component.state.username}
@@ -103,7 +100,7 @@ class UserStateFormContainer extends Component {
   				handleChange={(e) => component.handleChange(e)}
   			/>
   		);
-  	} else if (this.props.location.pathname === '/register') {
+  	} else if (this.props.location.pathname === APP_URL.REGISTER) {
   		return(
   			<RegisterForm
   				username={component.state.username}
@@ -134,9 +131,13 @@ class UserStateFormContainer extends Component {
 
   render() {
   	return (
-  		<div>
-  			{this.displayForm()}
-  			{this.displayMessage()}
+      <div className="columnCenter">
+    		<UserStateForm>
+    			{this.displayForm()}
+        </UserStateForm>
+        <div className="rowCenter">
+          {this.displayMessage()}
+        </div>
   		</div>
   	);
   }
