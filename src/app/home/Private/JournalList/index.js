@@ -16,6 +16,10 @@ class JournalListContainer extends Component {
     this.props.setMessage();
   }
 
+  handleJournalClick = (e) => {
+    this.props.history.push(APP_URL.JOURNALS_TAB + '/view/' + e.currentTarget.id);
+  }
+
   handleJournalDelete = (e) => {
     this.props.deleteJournal(this.props.journalList, e.currentTarget.id);
   }
@@ -45,7 +49,9 @@ class JournalListContainer extends Component {
     const component = this;
     return (
       <JournalListStyle>
-        <StyledLink to={APP_URL.JOURNALS_TAB + '/create'}>Create new journal</StyledLink>
+        <StyledLink to={APP_URL.JOURNALS_TAB + '/create'}>
+          Create new journal
+        </StyledLink>
         <div className="row">
           <h2>Journal Entries</h2>
           <div className="columnCenter">
@@ -59,6 +65,7 @@ class JournalListContainer extends Component {
         <JournalList
           isLoading={component.props.isLoading}
           journalList={component.props.journalList}
+          handleJournalClick = {(e) => component.handleJournalClick(e)}
           handleJournalDelete={(e) => component.handleJournalDelete(e)}
         />
       </JournalListStyle>

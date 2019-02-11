@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import JournalListContainer from './JournalList/index';
-import JournalContainer from './Journal/index';
-import UserInfoContainer from './UserInfo/index';
+import JournalListContainer from './JournalList';
+import CreateModeContainer from './Journal/CreateMode';
+import EditModeContainer from './Journal/EditMode';
+import ViewModeContainer from './Journal/ViewMode';
+import UserInfoContainer from './UserInfo';
 import { getJournalList } from '../redux/actions/journalList';
 
 import { APP_URL } from '../Routes/constants';
+import { CREATE, EDIT } from '../constants';
 
 class PrivateContainer extends Component {
   async componentDidMount() {
@@ -21,8 +24,14 @@ class PrivateContainer extends Component {
         <Route exact path={APP_URL.JOURNALS_TAB} render={() => (
           <JournalListContainer />
         )} />
-        <Route path={APP_URL.JOURNALS_TAB + '/:mode/:id?'} render={(props) => (
-          <JournalContainer key={props.match.params.mode} {...props} />
+        <Route path={APP_URL.JOURNALS_TAB + '/create'} render={(props) => (
+          <CreateModeContainer {...props} />
+        )} />
+        <Route path={APP_URL.JOURNALS_TAB + '/edit/:id?'} render={(props) => (
+          <EditModeContainer {...props} />
+        )} />
+        <Route path={APP_URL.JOURNALS_TAB + '/view/:id?'} render={(props) => (
+          <ViewModeContainer {...props} />
         )} />
         <Route path={APP_URL.SETTINGS_TAB} render={() => (
           <UserInfoContainer />

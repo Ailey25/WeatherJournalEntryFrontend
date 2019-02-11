@@ -1,82 +1,107 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`WeatherStamp [mount] renders props correctly 1`] = `
-<WeatherStamp
-  cityName="test city name"
-  isLoading={false}
-  mode="create"
-  temp="0"
-  unit="C"
-  weather={
-    Array [
-      Object {
-        "description": "Really cold",
-        "weatherId": "1",
-      },
-      Object {
-        "description": "Rain everywhere",
-        "weatherId": "2",
-      },
-    ]
-  }
-/>
-`;
-
-exports[`WeatherStamp [shallow] renders without crashing 1`] = `
-<div>
-  <label />
-  <br />
-  <label>
-    <sup>
-      °
-    </sup>
-  </label>
-  <br />
-  <div />
-</div>
-`;
-
-exports[`WeatherStamp with default props [mount] 1`] = `
-<WeatherStamp
-  cityName=""
-  isLoading={false}
-  mode={
-    Object {
-      "CREATE": "create",
-    }
-  }
-  temp={NaN}
-  unit="C"
-  weather={Array []}
->
-  <div>
+exports[`WeatherStamp props weathers renders 0 weather 1`] = `
+<styled.div>
+  <div
+    className="column"
+  >
     <label />
-    <br />
-    <label>
-      NaN
+    <div
+      className="row flexEnd"
+    >
+      <styled.label
+        id="temp"
+        size="2em"
+      >
+        undefined
+      </styled.label>
       <sup>
-        °
-        C
+        <styled.label
+          id="unit"
+          size="1.5em"
+        >
+          °
+        </styled.label>
       </sup>
-    </label>
-    <br />
-    <div />
+    </div>
   </div>
-</WeatherStamp>
+</styled.div>
 `;
 
-exports[`WeatherStamp with default props [shallow] 1`] = `
-<div>
-  <label />
-  <br />
-  <label>
-    NaN
-    <sup>
-      °
-      C
-    </sup>
-  </label>
-  <br />
-  <div />
-</div>
+exports[`WeatherStamp props weathers renders 1 weather 1`] = `
+<styled.div>
+  <div
+    className="column"
+  >
+    <label />
+    <div
+      className="row flexEnd"
+    >
+      <styled.label
+        id="temp"
+        size="2em"
+      >
+        undefined
+      </styled.label>
+      <sup>
+        <styled.label
+          id="unit"
+          size="1.5em"
+        >
+          °
+        </styled.label>
+      </sup>
+    </div>
+  </div>
+  <div
+    className="columnCenter"
+    id="weathers"
+  >
+    <div
+      className="row"
+      key="1"
+    >
+      <styled.div>
+        <img
+          src="http://openweathermap.org/img/w/10d.png"
+        />
+      </styled.div>
+      <div
+        className="columnCenter"
+      >
+        <label>
+          Really cold
+        </label>
+      </div>
+    </div>
+  </div>
+</styled.div>
+`;
+
+exports[`WeatherStamp renders correctly 1`] = `
+<styled.div>
+  <div
+    className="column"
+  >
+    <label />
+    <div
+      className="row flexEnd"
+    >
+      <styled.label
+        id="temp"
+        size="2em"
+      >
+        undefined
+      </styled.label>
+      <sup>
+        <styled.label
+          id="unit"
+          size="1.5em"
+        >
+          °
+        </styled.label>
+      </sup>
+    </div>
+  </div>
+</styled.div>
 `;

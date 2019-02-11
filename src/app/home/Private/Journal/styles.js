@@ -25,6 +25,11 @@ export const TextArea = styled(TextAreaStyle)`
   font-size: 0.8em;
 `;
 
+export const ViewTextArea = styled(TextArea)`
+  background: snow;
+  resize: none;
+`;
+
 export const Input = styled(InputStyle)`
   font-size: ${props => props.small ? '0.8rem' : ''};
 `;

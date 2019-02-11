@@ -53,7 +53,9 @@ const JournalList = (props) => {
     let list = journals.map((journal) => {
       return (
         <EntryContainer key={journal.id}>
-          <TitleEntryContainer>
+          <TitleEntryContainer id={journal.id}
+            onClick={(e) => props.handleJournalClick(e)}
+          >
             {formatTitle(journal.title)}
             {formatEntry(journal.entry)}
           </TitleEntryContainer>

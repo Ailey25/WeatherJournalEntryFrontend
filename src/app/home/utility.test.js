@@ -1,4 +1,5 @@
 import {
+  CELCIUS, FAHRENHEIT,
   CITY_NAME_VALIDATION_STATUS, CITY_ID_VALIDATION_STATUS,
   STATUS_CODE,
 } from './constants'
@@ -6,6 +7,7 @@ import {
 import {
   validateCityName,
   validateCityId,
+  calcTemp,
 } from './utility';
 
 describe('validateCityName()', () => {
@@ -94,6 +96,25 @@ describe('validateCityId()', () => {
 
     it('returns success status', () => {
       expect(result).toBe(CITY_ID_VALIDATION_STATUS.SUCCESS);
+    });
+  });
+});
+
+describe('calcTemp()', () => {
+  let temp = '';
+  let unit = '';
+  let result = '';
+
+  describe('from kelvin to CELCIUS', () => {
+    beforeEach(() => {
+      unit = CELCIUS;
+    });
+
+    it('returns success status', () => {
+      temp = 273.15;
+      result = calcTemp(temp, unit);
+
+      expect(result).toBe(0);
     });
   });
 });

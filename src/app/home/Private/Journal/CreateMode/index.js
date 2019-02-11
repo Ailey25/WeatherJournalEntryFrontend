@@ -3,38 +3,36 @@ import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom';
 import uuidv4 from 'uuid/v4';
 
-import WeatherStampContainer from '../WeatherStamp/index';
-import JournalHeader from './JournalHeader/index';
-import JournalBody from './JournalBody/index';
-import JournalPostWeatherDataInputs from './JournalPostWeatherDataInputs/index';
-import JournalPostWeatherDataResults from './JournalPostWeatherDataResults/index';
-import { setJournalMode, addJournal, editJournal } from '../../redux/actions/synchronous';
+import WeatherStampContainer from '../../WeatherStamp';
+import JournalBody from '../JournalBody';
+import WeatherLocationInput from '../WeatherLocationInput';
+import JournalStatus from '../JournalStatus';
+import { addJournal } from '../../../redux/actions/synchronous';
 import {
   postWeatherData,
   setMessage as setWeatherMessage
-} from '../../redux/actions/weatherData';
+} from '../../../redux/actions/weatherData';
 import {
   postJournalList,
   setMessage as setJournalMessage
-} from '../../redux/actions/journalList';
+} from '../../../redux/actions/journalList';
 import {
-  CREATE, EDIT,
+  CREATE,
   CITY_ID, CITY_NAME,
-  BASE_URL,
   CITY_NAME_VALIDATION_STATUS, CITY_NAME_VALIDATION_MESSAGE,
   CITY_ID_VALIDATION_STATUS, CITY_ID_VALIDATION_MESSAGE,
-} from '../../constants'
+} from '../../../constants'
 import {
   validateCityName,
   validateCityId,
   setDataWeatherPostUrl,
   getUserId,
-} from '../../utility';
-import { APP_URL } from '../../Routes/constants';
+} from '../../../utility';
+import { APP_URL } from '../../../Routes/constants';
 
-import { JournalStyle, InputSubmit, StyledLink, Label } from './styles';
+import { JournalStyle, InputSubmit, StyledLink, Label } from '../styles';
 
-class JournalContainer extends Component {
+class CreateModeContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,38 +47,17 @@ class JournalContainer extends Component {
   componentDidMount() {
     this.props.setJournalMessage('');
     this.props.setWeatherMessage('');
-    if (this.props.match.params.mode === CREATE) {
-      this.setState({
-        id: uuidv4()
-      });
-    } else if (this.props.match.params.mode === EDIT) {
 
-      let journal = this.getJournal(this.props.match.params.id);
-      this.setState({
-        id: this.props.match.params.id,
-        title: journal.title,
-        entry: journal.entry,
-        callType: CITY_ID,
-      });
-    } else {
-      this.props.setJournalMessage('Journal mode not recognized');
-    }
+    // set new ID since it's CREATE mode
+    this.setState({
+      id: uuidv4()
+    });
   }
 
   componentDidUpdate() {
     if (!(getUserId())) {
-       this.props.history.push("/");
+       this.props.history.push(APP_URL.HOME_TAB);
     }
-  }
-
-  getJournal = (journalId) => {
-    let object;
-    this.props.journalList.forEach((elem) => {
-      if (elem.id === journalId) {
-        object = elem;
-      }
-    });
-    return object;
   }
 
   handleChange = (e) => {
@@ -121,13 +98,11 @@ class JournalContainer extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (this.props.match.params.mode === CREATE) {
-      if (!this.validateSubmission()) return;
-    }
-
+    if (!this.validateSubmission()) return;
     if (this.props.weatherObject === undefined) return;
+
     let fetchUrl = setDataWeatherPostUrl(
-      this.props.match.params.mode,
+      CREATE,
       this.state.callType,
       this.state.id,
       this.state.callParamsString,
@@ -135,13 +110,15 @@ class JournalContainer extends Component {
     );
 
     await this.props.postWeatherData(fetchUrl);
+
     if (!this.props.weatherOk) {
       this.props.setWeatherMessage('Journal entry could not be added - Invalid location');
       return;
     }
 
     let userId = getUserId();
-    if (this.updateJournalEntryList()) this.resetState();
+    this.addToJournalEntries();
+    this.resetState();
 
     await this.props.postJournalList(userId, this.props.journalList);
     if (!this.props.journalOk) {
@@ -152,7 +129,7 @@ class JournalContainer extends Component {
     this.props.history.push(APP_URL.JOURNALS_TAB);
   }
 
-  updateJournalEntryList = () => {
+  addToJournalEntries = () => {
     let journal = {
       id: this.state.id,
       title: this.state.title,
@@ -160,17 +137,7 @@ class JournalContainer extends Component {
       cityId: this.props.weatherObject.cityId,
     };
 
-    switch(this.props.match.params.mode) {
-      case CREATE:
-        this.props.addJournal(this.props.journalList, journal);
-        return true;
-      case EDIT:
-        this.props.editJournal(this.props.journalList, journal);
-        return true;
-      default:
-        this.props.setJournalMessage('Journal entry mode not recognized');
-        return false;
-    }
+    this.props.addJournal(this.props.journalList, journal);
   }
 
   validateSubmission = () => {
@@ -190,9 +157,8 @@ class JournalContainer extends Component {
     }
   }
 
-
   resetState = () => {
-    if (this.props.match.params.mode === CREATE) this.setState({ id: uuidv4() })
+    this.setState({ id: uuidv4() });
     this.setState({
       title: '',
       entry: '',
@@ -206,33 +172,29 @@ class JournalContainer extends Component {
     return (
       <JournalStyle>
         <StyledLink to={APP_URL.JOURNALS_TAB}>Back to journal entries</StyledLink>
-        <JournalHeader
-          mode={component.props.match.params.mode}
-        />
+        <h2 id='journalHeader'>Creating journal entry</h2>
         <hr></hr>
-        <WeatherStampContainer id={component.props.match.params.id}
-          mode={component.props.match.params.mode}
-        />
-        <JournalBody
-          handleSubmit={(e) => component.handleSubmit(e)}
-          handleChange={(e) => component.handleChange(e)}
-          title={component.state.title}
-          entry={component.state.entry}
-        />
-        <JournalPostWeatherDataInputs
-          mode={component.props.match.params.mode}
-          handleSubmit={(e) => component.handleSubmit(e)}
-          handleChange={(e) => component.handleChange(e)}
-          check={component.state.callType}
-          callParamsString={component.state.callParamsString}
-        />
-        <form className="column" onSubmit={this.handleSubmit}>
+        <form onSubmit={(e) => component.handleSubmit(e)}>
+          <JournalBody
+            handleChange={(e) => component.handleChange(e)}
+            title={component.state.title}
+            entry={component.state.entry}
+          />
+          <WeatherLocationInput
+            isShow={true}
+            handleChange={(e) => component.handleChange(e)}
+            check={component.state.callType}
+            callParamsString={component.state.callParamsString}
+          />
           <InputSubmit type="submit" />
-          <Label example>Will automatically save journals</Label>
         </form>
-        <JournalPostWeatherDataResults
-          isLoading={component.props.weatherIsPosting}
-          message={component.props.weatherMessage}
+        <Label example>Will automatically save journals</Label>
+        <JournalStatus
+          isPosting={component.props.journalIsPosting}
+          messages={[
+            component.props.weatherMessage,
+            component.props.journalMessage
+          ]}
         />
       </JournalStyle>
     );
@@ -253,8 +215,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   addJournal: (journalList, journal) =>
     dispatch(addJournal(journalList, journal)),
-  editJournal: (journalList, journal) =>
-    dispatch(editJournal(journalList, journal)),
   postWeatherData: (fetchUrl) =>
     dispatch(postWeatherData(fetchUrl)),
   setWeatherMessage: (message) =>
@@ -266,5 +226,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(JournalContainer)
+  connect(mapStateToProps, mapDispatchToProps)(CreateModeContainer)
 );

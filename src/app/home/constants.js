@@ -25,6 +25,7 @@ export const DELETE_ACCOUNT = "delete-account";
 // also used as input ids for journal so " " instead of ' '
 export const CREATE = "create";
 export const EDIT = "edit";
+export const VIEW = "view";
 export const CITY_ID = 'CITY_ID';
 export const CITY_NAME = 'CITY_NAME';
 

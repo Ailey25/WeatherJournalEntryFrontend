@@ -6,14 +6,13 @@ import { calcTemp } from '../../../utility.js';
 import { WeatherStampStyle, ImageContainer, Label } from './styles';
 
 const WeatherStamp = (props) => {
-  if (props.mode === CREATE) return null;
   if (props.isLoading) return(<div>Loading weather info...</div>);
 
-  let convertedTemp = calcTemp(props.temp, props.unit).toString();
+  let convertedTemp = '' + calcTemp(props.temp, props.unit);
 
   let displayWeathers = (weathers) => {
     if (weathers === undefined || weathers.length === 0) {
-      return (<div className="columnCenter"></div>);
+      return null;
     }
 
     let list = weathers.map((weather) => (
@@ -26,7 +25,7 @@ const WeatherStamp = (props) => {
         </div>
       </div>
     ));
-    return (<div className="columnCenter">{list}</div>);
+    return (<div id="weathers" className="columnCenter">{list}</div>);
   };
 
   return (
@@ -34,13 +33,13 @@ const WeatherStamp = (props) => {
       <div className="column">
         <label>{props.cityName}</label>
         <div className="row flexEnd">
-          <Label size="2em">{convertedTemp}</Label>
+          <Label id="temp" size="2em">{convertedTemp}</Label>
           <sup>
-            <Label size="1.5em">°{props.unit}</Label>
+            <Label id="unit" size="1.5em">°{props.unit}</Label>
           </sup>
         </div>
       </div>
-      {displayWeathers(props.weather)}
+      {displayWeathers(props.weathers)}
     </WeatherStampStyle>
   );
 }

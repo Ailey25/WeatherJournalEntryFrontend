@@ -4,16 +4,17 @@ import { withRouter } from 'react-router-dom';
 import { isUserLoggedIn, clearLocalStorage } from '../utility';
 import LogoutButton from './LogoutButton/index';
 import RegisterButton from './RegisterButton/index';
+import { APP_URL } from '../Routes/constants';
 
 class UserStateButtonContainer extends Component {
   handleClick = (e) => {
     switch(e.currentTarget.id) {
       case 'logout':
         clearLocalStorage();
-        this.props.history.push("/");
+        this.props.history.push(APP_URL.HOME_TAB);
         return;
       case 'register':
-        this.props.history.push("/register");
+        this.props.history.push(APP_URL.REGISTER);
         return;
       default:
         return;

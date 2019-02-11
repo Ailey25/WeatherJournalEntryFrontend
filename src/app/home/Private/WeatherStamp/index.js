@@ -1,41 +1,46 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
-import 'babel-polyfill';
 
 import { WeatherStamp } from './WeatherStamp/index';
 import { getWeatherData, setMessage } from  '../../redux/actions/weatherData';
-import {
-  EDIT,
-  CELCIUS,
-  BASE_URL
-} from '../../constants'
 import { getUserId } from '../../utility';
+import { APP_URL } from '../../Routes/constants';
 
-class WeatherStampContainer extends Component {
+export class WeatherStampContainer extends Component {
   async componentDidMount() {
     this.props.resetMessage();
-    if (this.props.mode === EDIT) {
+    if (!this.props.hide) {
       await this.props.getWeatherData(this.props.id);
     }
   }
 
   componentDidUpdate() {
     if (!(getUserId())) {
-      this.props.history.push("/");
+      this.props.history.push(APP_URL.HOME_TAB);
     }
   }
 
   render() {
+    if (this.props.hide) return null;
+
     const component = this;
     return (
       <WeatherStamp
-        mode={component.props.mode}
+        hide={component.props.hide}
         isLoading={component.props.isLoading}
-        cityName={component.props.weatherObject.cityName}
+        cityName={
+          component.props.weatherObject
+            ? component.props.weatherObject.cityName
+            : ''
+        }
         unit={component.props.tempUnit}
-        temp={component.props.main.temp}
-        weather={component.props.weather}
+        temp={
+          component.props.main
+            ? component.props.main.temp
+            : ''
+        }
+        weathers={component.props.weather}
       />
     );
   }

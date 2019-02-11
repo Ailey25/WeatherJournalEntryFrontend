@@ -21,6 +21,7 @@ export const TitleEntryContainer = styled.div`
   justify-content: center;
 
   max-width: 50rem;
+  width: 100%;
   word-break: break-word;
 `;
 
