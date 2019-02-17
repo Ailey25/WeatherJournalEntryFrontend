@@ -29,7 +29,9 @@ class PublicContainer extends Component {
             </div>
           </div>
         </MainNavMenu>
-
+        <Route exact path='/' render={() => (
+          <Home />
+        )} />
         <Route path={APP_URL.HOME_TAB} render={() => (
           <Home />
         )} />

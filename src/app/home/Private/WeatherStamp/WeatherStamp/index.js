@@ -18,7 +18,7 @@ const WeatherStamp = (props) => {
     let list = weathers.map((weather) => (
       <div key={weather.weatherId} className="row">
         <ImageContainer>
-          <img src={"http://openweathermap.org/img/w/" + weather.icon + ".png"} />
+          <img src={"https://openweathermap.org/img/w/" + weather.icon + ".png"} />
         </ImageContainer>
         <div className="columnCenter">
           <label>{weather.description}</label>

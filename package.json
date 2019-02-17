@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server",
-    "build": "cross-env NODE_ENV=production node server.js",
+    "start": "cross-env NODE_ENV=development webpack && webpack-dev-server",
+    "build": "cross-env NODE_ENV=production webpack",
+    "server": "node server.js",
     "test": "jest --updateSnapshot"
   },
   "keywords": [],
@@ -40,6 +41,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "dotenv": "^6.2.0",
+    "http-server": "^0.11.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-hot-loader": "^4.6.5",
