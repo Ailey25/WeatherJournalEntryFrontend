@@ -32,7 +32,7 @@ import { APP_URL } from '../../../Routes/constants';
 
 import { JournalStyle, InputSubmit, StyledLink, Label } from '../styles';
 
-class CreateModeContainer extends Component {
+export class CreateModeContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -99,7 +99,9 @@ class CreateModeContainer extends Component {
     e.preventDefault();
 
     if (!this.validateSubmission()) return;
-    if (this.props.weatherObject === undefined) return;
+    if (!this.props.weatherObject) return;
+    let userId = getUserId();
+    if (!userId) return;
 
     let fetchUrl = setDataWeatherPostUrl(
       CREATE,
@@ -116,11 +118,11 @@ class CreateModeContainer extends Component {
       return;
     }
 
-    let userId = getUserId();
     this.addToJournalEntries();
     this.resetState();
 
     await this.props.postJournalList(userId, this.props.journalList);
+
     if (!this.props.journalOk) {
       this.props.setJournalMessage('Journals could not be saved');
       return;

@@ -10,7 +10,7 @@ import UserInfoContainer from './UserInfo';
 import { getJournalList } from '../redux/actions/journalList';
 
 import { APP_URL } from '../Routes/constants';
-import { CREATE, EDIT } from '../constants';
+import { CREATE, EDIT, VIEW } from '../constants';
 
 class PrivateContainer extends Component {
   async componentDidMount() {
@@ -24,13 +24,13 @@ class PrivateContainer extends Component {
         <Route exact path={APP_URL.JOURNALS_TAB} render={() => (
           <JournalListContainer />
         )} />
-        <Route path={APP_URL.JOURNALS_TAB + '/create'} render={(props) => (
+        <Route path={APP_URL.JOURNALS_TAB + '/' + CREATE} render={(props) => (
           <CreateModeContainer {...props} />
         )} />
-        <Route path={APP_URL.JOURNALS_TAB + '/edit/:id?'} render={(props) => (
+        <Route path={APP_URL.JOURNALS_TAB + '/' + EDIT + '/:id?'} render={(props) => (
           <EditModeContainer {...props} />
         )} />
-        <Route path={APP_URL.JOURNALS_TAB + '/view/:id?'} render={(props) => (
+        <Route path={APP_URL.JOURNALS_TAB + '/' + VIEW + '/:id?'} render={(props) => (
           <ViewModeContainer {...props} />
         )} />
         <Route path={APP_URL.SETTINGS_TAB} render={() => (

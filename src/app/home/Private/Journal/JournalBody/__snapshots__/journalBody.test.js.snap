@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JournalBody renders correctly 1`] = `
+<div
+  className="column"
+>
+  <Styled(styled.input)
+    id="title"
+    onChange={[Function]}
+    placeholder="Journal title"
+  />
+  <Styled(styled.textarea)
+    cols="50"
+    id="entry"
+    onChange={[Function]}
+    placeholder="Journal entry"
+    rows="10"
+  />
+</div>
+`;

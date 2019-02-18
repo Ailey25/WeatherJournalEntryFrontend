@@ -3,7 +3,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import { configure, shallow } from 'enzyme';
 import 'babel-polyfill';
 
-import { ViewModeContainer } from './index';
+import { ViewModeContainer } from '../ViewMode';
 
 configure({ adapter: new Adapter() })
 
@@ -17,17 +17,17 @@ describe('ViewModeContainer', () => {
     const props = {
       journalList: [],
       match: match,
-    }
+    };
     const wrapper = shallow(
       <ViewModeContainer {...props} />
     );
 
     expect(wrapper).not.toBeNull();
-    expect(wrapper).toMatchSnapshot();
   });
 });
 
-// assume getJournal() works
+// assume this.getJournal() method works
+// mock the states that are set by getJournal()
 describe('ViewModeContainer', () => {
   let props = {};
   let wrapper = {};
@@ -47,8 +47,6 @@ describe('ViewModeContainer', () => {
     );
   });
 
-  // states are set based on journal from getJournal()
-  // mock the states
   it('renders title that exists correctly', () => {
     let mockState = { title: 'fake title' };
     wrapper.setState({ ...mockState });

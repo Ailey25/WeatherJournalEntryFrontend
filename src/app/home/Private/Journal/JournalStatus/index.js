@@ -11,7 +11,7 @@ export const JournalStatus = (props) => {
   };
 
   return (
-    <div>{displayMessages(props.messages)}</div>
+    <div id='journalStatusMessage'>{displayMessages(props.messages)}</div>
   );
 };
 

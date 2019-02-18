@@ -4,7 +4,7 @@ import { EDIT, CITY_ID, CITY_NAME } from '../../../constants'
 import { InputRadio, Label, Input } from '../styles';
 
 export const WeatherLocationInput = (props) => {
-  if (!props.isShow) return null;
+  if (!props.isShow) return <div></div>;
 
   return (
     <div id="weather" className="column">

@@ -10,17 +10,24 @@ configure({ adapter: new Adapter() })
 
 describe('WeatherStampContainer', () => {
   const mockGetWeatherData = jest.fn();
+  const mockResetMessage = jest.fn();
 
   it('renders 1 weather stamp', () => {
     let wrapper = shallow(
-      <WeatherStampContainer getWeatherData={mockGetWeatherData} />
+      <WeatherStampContainer
+        getWeatherData={mockGetWeatherData}
+        resetMessage = {mockResetMessage}
+      />
     );
     expect(wrapper.find('WeatherStamp').length).toBe(1);
   });
 
   it('renders no weather stamp', () => {
     let wrapper = shallow(
-      <WeatherStampContainer hide getWeatherData={mockGetWeatherData} />
+      <WeatherStampContainer hide
+        getWeatherData={mockGetWeatherData}
+        resetMessage ={mockResetMessage}
+      />
     );
     expect(wrapper.find('WeatherStamp').length).toBe(0);
   });

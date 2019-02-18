@@ -24,7 +24,7 @@ import { APP_URL } from '../../../Routes/constants';
 
 import { JournalStyle, InputSubmit, StyledLink, Label } from '../styles';
 
-class EditModeContainer extends Component {
+export class EditModeContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,12 +42,14 @@ class EditModeContainer extends Component {
 
     // set id to be existing id since it's EDIT mode
     let journal = this.getJournal(this.props.match.params.id);
-    this.setState({
-      id: this.props.match.params.id,
-      title: journal.title,
-      entry: journal.entry,
-      callType: CITY_ID,
-    });
+    if (journal) {
+      this.setState({
+        id: this.props.match.params.id,
+        title: journal.title,
+        entry: journal.entry,
+        callType: CITY_ID,
+      });
+    }
   }
 
   componentDidUpdate() {
